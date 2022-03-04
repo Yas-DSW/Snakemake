@@ -8,6 +8,7 @@ j=0
 
 
 while j< len(liste_BD):
+	print(liste_BD[j])
 	while i < len (liste):
 		#on génére la commande qui sera utilisé pour lancer le snakemake 
 	#	commande ="snakemake --cores 8 /media/newvol/yascimkamel/Pipeline/Snakemake/copie/" + liste[i] +"/" + liste[i] + "_DNAZoo.fasta /media/newvol/yascimkamel/Pipeline/Snakemake/copie/"+ liste[i] +"/" + liste[i] +"_NCBI.fna "
@@ -20,3 +21,4 @@ while j< len(liste_BD):
 		#on lance la commande
 		os.system(commande)
 	j+=1
+
