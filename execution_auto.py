@@ -9,8 +9,7 @@ liste_BD = ["DNAZoo", "NCBI"]
 
 j=0
 while j< len(liste_BD):
-	print("copie des données depuis :" )
-	print(liste_BD[j])
+	print("copie des données depuis : \n\n" + liste_BD[j] +"\n\n" )
 	i=0
 	while i < len (liste):
 
@@ -24,10 +23,9 @@ while j< len(liste_BD):
 ############################################################################################################################################################################################################
 		
 #Au sien d'une base de données on lance lune commande snakemake par espèce
-		print("Lancement de la commande pour \n" +  liste[i])
+		print("Lancement de la commande pour \n\n" +  liste[i] + "\n\n")
 		commande ="snakemake --cores 8 /media/newvol/yascimkamel/Pipeline/Snakemake/copie/" + liste[i]+"/read/" + liste[i] +"_" + liste_BD[j] + "_ligne.txt"
 		i+=1
-		print (commande)
 		#on lance la commande
 		os.system(commande) #Lancement de la commande shell
 	j+=1
