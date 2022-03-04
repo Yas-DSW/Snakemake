@@ -69,7 +69,7 @@ rule copy :
 
 rule read:
         input :
-                "/media/newvol/yascimkamel/Pipeline/genome/{espece}/{assemblie}.fasta"
+                "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{assemblie}.fasta"
         output :
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/read/{assemblie}_ligne.txt"
         shell:
