@@ -19,3 +19,4 @@ while j< len(liste_BD):
 	print (commande)
 	#on lance la commande
 	os.system(commande)
+j+=1
