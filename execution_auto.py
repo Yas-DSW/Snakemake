@@ -15,8 +15,8 @@ while j< len(liste_BD):
 	#	commande ="snakemake --cores 8 /media/newvol/yascimkamel/Pipeline/Snakemake/copie/" + liste[i] +"/read/" + liste[i] + "_DNAZoo_read.txt"
 	#	commande ="snakemake --cores 8 /media/newvol/yascimkamel/Pipeline/Snakemake/copie/" + liste[i] +"/read/" + liste[i] + "_all_read.txt"
 		commande ="snakemake --cores 8 /media/newvol/yascimkamel/Pipeline/Snakemake/copie/" + liste[i]+"/read/" + liste[i] +"_" + liste[j] + "_ligne.txt"
-	i+=1
-	print (commande)
-	#on lance la commande
-	os.system(commande)
-j+=1
+		i+=1
+		print (commande)
+		#on lance la commande
+		os.system(commande)
+	j+=1
