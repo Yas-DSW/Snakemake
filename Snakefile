@@ -42,7 +42,7 @@ rule copy_NCBI :
 
 rule read_NCBI: 
 	input : 
-		"/media/newvol/yascimkamel/Pipeline/Pipeline/genome/{espece}/{assemblie}NCBI.fna"
+		"/media/newvol/yascimkamel/Pipeline/genome/{espece}/{assemblie}NCBI.fna"
 	output :
 		"/media/newvol/yascimkamel/Pipeline/Snakemake/{espece}/read/{assemblie}NCBI_read.txt" 
 	shell: 
