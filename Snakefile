@@ -44,7 +44,7 @@ rule read_NCBI:
 	input : 
 		"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}NCBI.fna"
 	output :
-		"/media/newvol/yascimkamel/Pipeline/Snakemake/read/{espece}/{assemblie}NCBI_read.txt" 
+		"/media/newvol/yascimkamel/Pipeline/Snakemake/{espece}/read/{assemblie}NCBI_read.txt" 
 	shell: 
 		"wc -l {input} > {output}"
 
@@ -59,9 +59,9 @@ rule read_DNA:
 rule merge_read:
 	    input :
 	            "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/read/{assemblie}DNAZoo_read.txt",
-	            "/media/newvol/yascimkamel/Pipeline/Snakemake/read/{espece}/{assemblie}NCBI_read.txt"
+	            "/media/newvol/yascimkamel/Pipeline/Snakemake/{espece}/read/{assemblie}NCBI_read.txt"
 	    output :
-	            "/media/newvol/yascimkamel/Pipeline/Snakemake/read/{espece}/{assemblie}_all_read.txt"
+	            "/media/newvol/yascimkamel/Pipeline/Snakemake/{espece}/read/{assemblie}_all_read.txt"
 	    shell:
 	            "cat{input} >> {output}"
 	            "rm {input}"
