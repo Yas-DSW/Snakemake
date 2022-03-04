@@ -59,7 +59,7 @@
 
 rule copy : 
 	input: 
-		"/media/newvol/yascimkamel/Pipeline/genome/{espece}/{assemblie}.fasta",
+		"/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{assemblie}.fasta",
 	output:
 		"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}.fasta"
 	shell:
