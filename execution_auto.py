@@ -9,7 +9,7 @@ liste_BD = ["DNAZoo", "NCBI"]
 
 j=0
 while j< len(liste_BD):
-	print("copie des données depuis : \n\n" + liste_BD[j] +"\n\n" )
+	print("\n\n Copie des données depuis : \n\n" + liste_BD[j] +"\n" )
 	i=0
 	while i < len (liste):
 
