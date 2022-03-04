@@ -1,23 +1,34 @@
 #!/usr/bin/env python3
 import os
 
+### On met en place les listes des espèces et bases de données à tester
+
 liste = ["Globicephala_melas", "Tursiop_truncatus","Megaptera_novaeangliae",]
 liste_BD = ["DNAZoo", "NCBI"]
 
+
 j=0
 while j< len(liste_BD):
+	print(copie des données depuis : )
 	print(liste_BD[j])
 	i=0
 	while i < len (liste):
-		#on génére la commande qui sera utilisé pour lancer le snakemake 
+
+#################################################################### Lignes de commandes test ##############################################################################################################
+
 	#	commande ="snakemake --cores 8 /media/newvol/yascimkamel/Pipeline/Snakemake/copie/" + liste[i] +"/" + liste[i] + "_DNAZoo.fasta /media/newvol/yascimkamel/Pipeline/Snakemake/copie/"+ liste[i] +"/" + liste[i] +"_NCBI.fna "
 	#	commande = "snakemake --cores 8 uncompress /media/newvol/yascimkamel/Pipeline/Snakemake/copie/" + liste[i] +"/" + liste[i] + "_DNAZoo.fasta /media/newvol/yascimkamel/Pipeline/Snakemake/copie/"+ liste[i] +"/" + liste[i] +"_NCBI.fna"
 	#	commande ="snakemake --cores 8 /media/newvol/yascimkamel/Pipeline/Snakemake/copie/" + liste[i] +"/read/" + liste[i] + "_DNAZoo_read.txt"
 	#	commande ="snakemake --cores 8 /media/newvol/yascimkamel/Pipeline/Snakemake/copie/" + liste[i] +"/read/" + liste[i] + "_all_read.txt"
+
+############################################################################################################################################################################################################
+		
+#Au sien d'une base de données on lance lune commande snakemake par espèce
+		print("Lancement de la commande pour \n" +  liste[i])
 		commande ="snakemake --cores 8 /media/newvol/yascimkamel/Pipeline/Snakemake/copie/" + liste[i]+"/read/" + liste[i] +"_" + liste_BD[j] + "_ligne.txt"
 		i+=1
 		print (commande)
 		#on lance la commande
-		os.system(commande)
+		os.system(commande) #Lancement de la commande shell
 	j+=1
 

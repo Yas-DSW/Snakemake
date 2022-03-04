@@ -7,6 +7,37 @@
 #		"python3 recup_lien.py {input} > {output}"
 
 
+
+
+rule copy : ### Permet de copier les génomes
+	input: 
+		"/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{assemblie}.fasta",
+	output:
+		"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}.fasta"
+	shell:
+		"cp {input} {output}"
+
+
+
+rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un assemblage
+        input :
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}.fasta"
+        output :
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/read/{assemblie}_ligne.txt"
+        shell:
+                "wc -l {input} > {output}"
+
+
+
+
+
+
+
+
+################################################################# Rules abandonnées ############################################################## 
+
+
+
 #rule name_recuperation :
 #	input: "/media/newvol/yascimkamel/genome/{espece}"
 #	output: 
@@ -57,26 +88,10 @@
    #     shell:
     #            "wc -l {input} > {output}"
 
-rule copy : 
-	input: 
-		"/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{assemblie}.fasta",
-	output:
-		"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}.fasta"
-	shell:
-		"cp {input} {output}"
 
 
 
-rule read:
-        input :
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}.fasta"
-        output :
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/read/{assemblie}_ligne.txt"
-        shell:
-                "wc -l {input} > {output}"
-
-
-#rule merge_read:
+    #rule merge_read:
 #	    input :
 #	            "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/read/{assemblie}DNAZoo_read.txt",
 #	            "/media/newvol/yascimkamel/Pipeline/Snakemake/{espece}/read/{assemblie}NCBI_read.txt"
