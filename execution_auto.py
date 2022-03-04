@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import os
 
-liste = ["Globicephala_melas", "Tursiop_truncatus","Megaptera_novaeangliae"]
+liste = ["Globicephala_melas_DNAZoo", "Tursiop_truncatus_DNAZoo","Megaptera_novaeangliae_DNAZoo","Globicephala_melas_NCBI", "Tursiop_truncatus_NCBI","Megaptera_novaeangliae_NCBI"]
 
 i=0
 
