@@ -1,0 +1,38 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 8
+Rules claiming more threads will be scaled down.
+Job stats:
+job      count    min threads    max threads
+-----  -------  -------------  -------------
+copy         1              1              1
+read         1              1              1
+total        2              1              1
+
+Select jobs to execute...
+
+[Fri Mar  4 11:39:16 2022]
+rule copy:
+    input: /media/newvol/yascimkamel/Pipeline/genome/copie/Globicephala_melas/Globicephala_melas_DNAZoo.fasta
+    output: /media/newvol/yascimkamel/Pipeline/Snakemake/copie/Globicephala_melas/Globicephala_melas_DNAZoo.fasta
+    jobid: 1
+    wildcards: espece=Globicephala_melas, assemblie=Globicephala_melas_DNAZoo
+    resources: tmpdir=/tmp
+
+[Fri Mar  4 11:39:21 2022]
+Finished job 1.
+1 of 2 steps (50%) done
+Select jobs to execute...
+
+[Fri Mar  4 11:39:21 2022]
+rule read:
+    input: /media/newvol/yascimkamel/Pipeline/Snakemake/copie/Globicephala_melas/Globicephala_melas_DNAZoo.fasta
+    output: /media/newvol/yascimkamel/Pipeline/Snakemake/copie/Globicephala_melas/read/Globicephala_melas_DNAZoo_ligne.txt
+    jobid: 0
+    wildcards: espece=Globicephala_melas, assemblie=Globicephala_melas_DNAZoo
+    resources: tmpdir=/tmp
+
+[Fri Mar  4 11:39:23 2022]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: /media/newvol/yascimkamel/Pipeline/Snakemake/.snakemake/log/2022-03-04T113916.114500.snakemake.log

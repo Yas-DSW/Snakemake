@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import os
-
 ### On met en place les listes des espèces et bases de données à tester
+
 
 liste = ["Globicephala_melas", "Tursiop_truncatus","Megaptera_novaeangliae"]
 liste_BD = ["DNAZoo", "NCBI"]

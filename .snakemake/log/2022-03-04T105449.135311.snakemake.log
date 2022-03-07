@@ -1,0 +1,24 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 8
+Rules claiming more threads will be scaled down.
+Job stats:
+job      count    min threads    max threads
+-----  -------  -------------  -------------
+read         1              1              1
+total        1              1              1
+
+Select jobs to execute...
+
+[Fri Mar  4 10:54:49 2022]
+rule read:
+    input: /media/newvol/yascimkamel/Pipeline/genome/copie/Tursiop_truncatus/Tursiop_truncatus_DNAZoo.fasta
+    output: /media/newvol/yascimkamel/Pipeline/Snakemake/copie/Tursiop_truncatus/read/Tursiop_truncatus_DNAZoo_ligne.txt
+    jobid: 0
+    wildcards: espece=Tursiop_truncatus, assemblie=Tursiop_truncatus_DNAZoo
+    resources: tmpdir=/tmp
+
+[Fri Mar  4 10:54:52 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+Complete log: /media/newvol/yascimkamel/Pipeline/Snakemake/.snakemake/log/2022-03-04T105449.135311.snakemake.log

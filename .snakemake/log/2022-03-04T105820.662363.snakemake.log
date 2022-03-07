@@ -1,0 +1,4 @@
+Building DAG of jobs...
+MissingInputException in line 60 of /media/newvol/yascimkamel/Pipeline/Snakemake/Snakefile:
+Missing input files for rule copy:
+/media/newvol/yascimkamel/Pipeline/genome/Tursiop_truncatus/Tursiop_truncatus_DNAZoo.fasta

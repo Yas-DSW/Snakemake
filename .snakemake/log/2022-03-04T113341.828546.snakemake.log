@@ -1,0 +1,38 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 8
+Rules claiming more threads will be scaled down.
+Job stats:
+job      count    min threads    max threads
+-----  -------  -------------  -------------
+copy         1              1              1
+read         1              1              1
+total        2              1              1
+
+Select jobs to execute...
+
+[Fri Mar  4 11:33:41 2022]
+rule copy:
+    input: /media/newvol/yascimkamel/Pipeline/genome/copie/Tursiop_truncatus/Tursiop_truncatus_NCBI.fasta
+    output: /media/newvol/yascimkamel/Pipeline/Snakemake/copie/Tursiop_truncatus/Tursiop_truncatus_NCBI.fasta
+    jobid: 1
+    wildcards: espece=Tursiop_truncatus, assemblie=Tursiop_truncatus_NCBI
+    resources: tmpdir=/tmp
+
+[Fri Mar  4 11:33:46 2022]
+Finished job 1.
+1 of 2 steps (50%) done
+Select jobs to execute...
+
+[Fri Mar  4 11:33:46 2022]
+rule read:
+    input: /media/newvol/yascimkamel/Pipeline/Snakemake/copie/Tursiop_truncatus/Tursiop_truncatus_NCBI.fasta
+    output: /media/newvol/yascimkamel/Pipeline/Snakemake/copie/Tursiop_truncatus/read/Tursiop_truncatus_NCBI_ligne.txt
+    jobid: 0
+    wildcards: espece=Tursiop_truncatus, assemblie=Tursiop_truncatus_NCBI
+    resources: tmpdir=/tmp
+
+[Fri Mar  4 11:33:48 2022]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: /media/newvol/yascimkamel/Pipeline/Snakemake/.snakemake/log/2022-03-04T113341.828546.snakemake.log
