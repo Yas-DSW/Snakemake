@@ -29,6 +29,13 @@ rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un as
 
 
 
+rule busco :
+        input:
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}.fasta"
+        output:
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_BUSCO/"
+        shell: 
+                "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 --cpu=8"
 
 
 
