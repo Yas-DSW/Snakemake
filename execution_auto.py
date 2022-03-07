@@ -28,7 +28,7 @@ while j< len(liste_BD):
 		print("\n\n Lancement de la commande pour :\n\n        " +  liste[i] + "\n\n")
 		#Commande permettant d'effectuer la régle wc -l
 		#commande ="snakemake --cores 8 /media/newvol/yascimkamel/Pipeline/Snakemake/copie/" + liste[i]+"/read/" + liste[i] +"_" + liste_BD[j] + "_ligne.txt"
-		commande ="snakemake --cores 8 /media/newvol/yascimkamel/Pipeline/Snakemake/copie/"+liste[i]+"/"+liste[i] +"_" + liste_BD[j]+"_BUSCO/"
+		commande ="snakemake --cores 17 /media/newvol/yascimkamel/Pipeline/Snakemake/copie/"+liste[i]+"/"+liste[i] +"_" + liste_BD[j]+"_BUSCO/"
 		i+=1
 		#on lance la commande
 		os.system(commande) #Lancement de la commande shell
