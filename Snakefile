@@ -33,7 +33,7 @@ rule busco :
         input:
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}.fasta"
         output:
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_BUSCO/"
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_BUSCO"
         shell: 
                 "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 --cpu=8"
 
