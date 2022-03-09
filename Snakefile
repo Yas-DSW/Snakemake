@@ -13,7 +13,8 @@ liste_BD = ["DNAZoo", "NCBI"]
 
 rule construct_assemblie:
         
-        input : expand("{espece}_{BD}_f.fasta", espece=ESPECE, BD=liste_BD)
+        input : 
+                expand("{espece}_{BD}_f.fasta", espece=ESPECE, BD=liste_BD)
                 
         output : 
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/message.txt"
