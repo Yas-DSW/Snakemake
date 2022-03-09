@@ -6,14 +6,25 @@
 #	shell: 
 #		"python3 recup_lien.py {input} > {output}"
 
+ESPECE=["Globicephala_melas", "Tursiop_truncatus","Megaptera_novaeangliae"]
+liste_BD = ["DNAZoo", "NCBI"]
+
+rule construct_assemblie:
+        input:
+                expand("{espece}", espece=ESPECE )
+        output : 
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/message.txt"
+        run :
+                "i=len({espece}) "
+
 
 
 
 rule copy : ### Permet de copier les génomes
 	input: 
-		"/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{assemblie}.fasta",
+		"/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{assemblie}_f.fasta",
 	output:
-		"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}.fasta"
+		"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
 	shell:
 		"cp {input} {output}"
 
@@ -21,17 +32,16 @@ rule copy : ### Permet de copier les génomes
 
 rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un assemblage
         input :
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}.fasta"
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
         output :
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/read/{assemblie}_ligne.txt"
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/read/{assemblie}_ligne_number.txt"
         shell:
                 "wc -l {input} > {output}"
 
 
-
 rule busco :
         input:
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}.fasta"
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
         output:
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_BUSCO"
         shell: 
