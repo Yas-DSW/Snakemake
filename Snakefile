@@ -7,8 +7,7 @@
 #		"python3 recup_lien.py {input} > {output}"
 
 
-rule construct_assemblie:
-        
+rule construct_assemblie: 
         input : 
                 ["Globicephala_melas", "Tursiop_truncatus","Megaptera_novaeangliae"]
         output : 
