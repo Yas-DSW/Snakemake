@@ -11,21 +11,9 @@ liste_BD = ["DNAZoo", "NCBI"]
 
 
 
-rule construct_assemblie:    
-        input : 
-                expand("{espece}_{BD}_f.fasta", espece=ESPECE, BD=liste_BD)
-                
-        output : 
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/message.txt"
-        run :
-                "echo {input} >> message.txt"
-
-
-
-
 rule copy : ### Permet de copier les génomes
 	input: 
-		"/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{assemblie}_f.fasta",
+		expand("/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}_{BD}_f.fasta", espece=ESPECE, BD=liste_BD)
 	output:
 		"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
 	shell:
