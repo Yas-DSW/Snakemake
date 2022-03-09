@@ -6,15 +6,15 @@
 #	shell: 
 #		"python3 recup_lien.py {input} > {output}"
 
-ESPECE=["Globicephala_melas", "Tursiop_truncatus","Megaptera_novaeangliae"]
-liste_BD = ["DNAZoo", "NCBI"]
 
 rule construct_assemblie:
+        
+        input : 
+                ["Globicephala_melas", "Tursiop_truncatus","Megaptera_novaeangliae"]
         output : 
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/message.txt"
         run :
-                "i=len(expand("{espece}", espece=ESPECE ))"
-                "print (i) >> message.txt"
+                "echo {input} > {output}"
 
 
 
