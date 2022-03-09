@@ -11,8 +11,7 @@ liste_BD = ["DNAZoo", "NCBI"]
 
 
 
-rule construct_assemblie:
-        
+rule construct_assemblie:    
         input : 
                 expand("{espece}_{BD}_f.fasta", espece=ESPECE, BD=liste_BD)
                 
