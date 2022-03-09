@@ -16,7 +16,7 @@ rule construct_assemblie:
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/message.txt"
         run :
                 "i=len({espece})"
-                "print (i) "
+                "print (i) >> message.txt"
 
 
 
