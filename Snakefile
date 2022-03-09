@@ -10,12 +10,10 @@ ESPECE=["Globicephala_melas", "Tursiop_truncatus","Megaptera_novaeangliae"]
 liste_BD = ["DNAZoo", "NCBI"]
 
 rule construct_assemblie:
-        input:
-                expand("{espece}", espece=ESPECE )
         output : 
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/message.txt"
         run :
-                "i=len({espece})"
+                "i=len(expand("{espece}", espece=ESPECE ))"
                 "print (i) >> message.txt"
 
 
