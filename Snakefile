@@ -17,7 +17,9 @@ rule copy : ### Permet de copier les génomes
 	output:
               "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta"
 	shell:
-                "cp {input} {output} "rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un assemblage
+                "cp {input} {output} "
+
+#rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un assemblage
 #         input :
 #                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
 #         output :
