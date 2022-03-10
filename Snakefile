@@ -6,9 +6,13 @@
 #		"données.txt"
 #	shell: 
 #		"python3 recup_lien.py {input} > {output}"
-#ESPECE=["Globicephala_melas", "Tursiop_truncatus","Megaptera_novaeangliae"]
-#liste_BD = ["DNAZoo", "NCBI"]
+ESPECE=["Globicephala_melas", "Tursiop_truncatus","Megaptera_novaeangliae"]
+liste_BD = ["DNAZoo", "NCBI"]
 
+
+rule all:
+        input:
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/count_ligne_number.txt"
 
 
 rule copy : ### Permet de copier les génomes
@@ -19,13 +23,13 @@ rule copy : ### Permet de copier les génomes
 	shell:
                 "cp {input} {output} "
 
-#rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un assemblage
-#         input :
-#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
-#         output :
-#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/read/{assemblie}_ligne_number.txt"
-#         shell:
-#                 "wc -l {input} > {output}"
+rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un assemblage
+        input :
+                 expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta", espece=ESPECES,BD=liste_BD)
+         output :
+                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/count_ligne_number.txt"
+         shell:
+                 "wc -l {input} > count_ligne_number"
 
 
 # rule busco :
