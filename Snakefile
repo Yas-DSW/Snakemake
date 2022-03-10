@@ -29,7 +29,7 @@ rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un as
         output :
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/count_ligne_number.txt"
         shell:
-                "wc -l {input} > count_ligne_number"
+                "wc -l {input} > {output}"
 
 
 # rule busco :
