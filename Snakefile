@@ -25,11 +25,11 @@ rule copy : ### Permet de copier les génomes
 
 rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un assemblage
         input :
-                 expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta", espece=ESPECES,BD=liste_BD)
-         output :
-                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/count_ligne_number.txt"
-         shell:
-                 "wc -l {input} > count_ligne_number"
+                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta", espece=ESPECES,BD=liste_BD)
+        output :
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/count_ligne_number.txt"
+        shell:
+                "wc -l {input} > count_ligne_number"
 
 
 # rule busco :
