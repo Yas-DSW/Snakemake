@@ -6,20 +6,21 @@
 #		"données.txt"
 #	shell: 
 #		"python3 recup_lien.py {input} > {output}"
-
-ESPECE=["Globicephala_melas", "Tursiop_truncatus","Megaptera_novaeangliae"]
-liste_BD = ["DNAZoo", "NCBI"]
+configfile: "config.yaml"
+#ESPECE=["Globicephala_melas", "Tursiop_truncatus","Megaptera_novaeangliae"]
+#liste_BD = ["DNAZoo", "NCBI"]
 
 
 
 rule copy : ### Permet de copier les génomes
 	input: 
-		"/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta" 
+	       "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta" 
 	output:
-                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta",espece=ESPECE, BD=liste_BD)
-	run :
-		for f in input : 
-                        shell ("cp {input} {output} ")
+              "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta",
+        message : 
+                "copie des fichiers fasta "
+	shell:
+                "cp {input} {output} "
 
 
 
