@@ -21,7 +21,7 @@ rule copy : ### Permet de copier les génomes
 	run :
 		for f in input :
                         ...
-                        os.system(cp input output)
+                        os.system(cp {input} {output})
 
 
 
