@@ -15,7 +15,8 @@ rule copy : ### Permet de copier les génomes
 	input: 
 		expand("/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta", espece=ESPECE, BD=liste_BD)
 	output:
-		"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
+		"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/message_copied.fasta"
+                #"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
 	run:
 		"print (input)"
 
