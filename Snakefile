@@ -19,7 +19,7 @@ rule copy : ### Permet de copier les génomes
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta",
 	run :
 		for f in input : 
-                        shell "cp {input} {output} "
+                        shell ("cp {input} {output} ")
 
 
 
