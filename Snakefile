@@ -6,7 +6,7 @@
 #		"données.txt"
 #	shell: 
 #		"python3 recup_lien.py {input} > {output}"
-ESPECE=["Globicephala_melas", "Tursiop_truncatus","Megaptera_novaeangliae"]
+ESPECES=["Globicephala_melas", "Tursiop_truncatus","Megaptera_novaeangliae"]
 liste_BD = ["DNAZoo", "NCBI"]
 
 
