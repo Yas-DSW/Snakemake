@@ -6,7 +6,6 @@
 #		"données.txt"
 #	shell: 
 #		"python3 recup_lien.py {input} > {output}"
-configfile: "config.yaml"
 #ESPECE=["Globicephala_melas", "Tursiop_truncatus","Megaptera_novaeangliae"]
 #liste_BD = ["DNAZoo", "NCBI"]
 
