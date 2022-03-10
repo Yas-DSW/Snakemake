@@ -17,26 +17,42 @@ rule copy : ### Permet de copier les génomes
 	output:
               "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta"
 	shell:
-                "cp {input} {output} "
+                "cp {input} {output} "rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un assemblage
+#         input :
+#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
+#         output :
+#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/read/{assemblie}_ligne_number.txt"
+#         shell:
+#                 "wc -l {input} > {output}"
+
+
+# rule busco :
+#         input:
+#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
+#         output:
+#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_BUSCO"
+#         shell: 
+#                 "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 --cpu=8"
 
 
 
-rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un assemblage
-        input :
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
-        output :
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/read/{assemblie}_ligne_number.txt"
-        shell:
-                "wc -l {input} > {output}"
+
+# rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un assemblage
+#         input :
+#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
+#         output :
+#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/read/{assemblie}_ligne_number.txt"
+#         shell:
+#                 "wc -l {input} > {output}"
 
 
-rule busco :
-        input:
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
-        output:
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_BUSCO"
-        shell: 
-                "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 --cpu=8"
+# rule busco :
+#         input:
+#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
+#         output:
+#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_BUSCO"
+#         shell: 
+#                 "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 --cpu=8"
 
 
 
