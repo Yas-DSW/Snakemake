@@ -14,12 +14,12 @@ liste_BD = ["DNAZoo", "NCBI"]
 
 rule copy : ### Permet de copier les génomes
 	input: 
-		expand("/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta", espece=ESPECE, BD=liste_BD)
+		"/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta"
 	output:
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta",
+                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta", espece=ESPECE, BD=liste_BD)
 	run :
-		for f in input :
-                        shell("cp f {output}")
+		for f in output :
+                        shell("cp {intput} {output}")
 
 
 
