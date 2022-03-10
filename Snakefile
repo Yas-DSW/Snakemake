@@ -18,7 +18,7 @@ rule copy : ### Permet de copier les génomes
 		"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/message_copied.fasta"
                 #"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
 	run:
-		"print (input)"
+		"print ({input})"
 
 
 
