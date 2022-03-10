@@ -1,3 +1,5 @@
+
+import os
 #rule read_csv : 
 #	input: 
 #		"données/données.csv"
@@ -15,10 +17,11 @@ rule copy : ### Permet de copier les génomes
 	input: 
 		expand("/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta", espece=ESPECE, BD=liste_BD)
 	output:
-		"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/message_copied.txt"
-                #"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
-	run:
-		"print ({input}) >> {output}"
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
+	run :
+		for f in input :
+                        ...
+                        os.system(cp input output)
 
 
 
