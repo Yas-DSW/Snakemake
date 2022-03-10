@@ -18,7 +18,7 @@ rule copy : ### Permet de copier les génomes
 	output:
                 expand(["/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta"], espece=ESPECE, BD=liste_BD)
 	shell : 
-                echo {output}
+                "cp {input} {output}"
 
 
 
