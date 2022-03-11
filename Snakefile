@@ -32,31 +32,53 @@ rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un as
                 "wc -l {input} > {output}"
 
 
-# rule busco :
-#         input:
-#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
-#         output:
-#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_BUSCO"
-#         shell: 
-#                 "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 --cpu=8"
+ rule busco :
+         input:
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta"
+         output:
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO"
+         shell: 
+                "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 --cpu=8"
+
+rule augustus :
+        input : 
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta"
+        output:
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}.gff"
+        shell : 
+                "augustus --species=human  {input} > {output}"
 
 
-
+rule bedtools : 
+        input: 
+                fasta="/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta", 
+                gff="/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}.gff"
+        output:
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_OR.fasta"
+        shell: 
+                "bedtools getfasta -fo {output} -fi {fasta} -bed {gff} "
+rule ORA
+        input:
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_OR.fasta"
+        output:
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/recapitulatif.csv"
+        shell : 
+                "or.pl --format=csv --sequence={input}"
 
 # rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un assemblage
 #         input :
-#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
+#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta"
 #         output :
-#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/read/{assemblie}_ligne_number.txt"
+#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/read/{espece}_{BD}_ligne_number.txt"
 #         shell:
 #                 "wc -l {input} > {output}"
 
 
 # rule busco :
 #         input:
-#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_copied.fasta"
+#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta"
 #         output:
-#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}_BUSCO"
+#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO"
 #         shell: 
 #                 "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 --cpu=8"
 
@@ -71,30 +93,30 @@ rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un as
 #rule name_recuperation :
 #	input: "/media/newvol/yascimkamel/genome/{espece}"
 #	output: 
-#		"assemblie_{espece}.txt"
+#		{espece}_{BD}{espece}.txt"
 #	shell:
-#		"ls {input} > assemblie_{wildcards.espece}.txt " 
+#		"ls {input} >{espece}_{BD}{wildcards.espece}.txt " 
 
 
 #rule copy_DNA : 
 #	input: 
-#		"/media/newvol/yascimkamel/Pipeline/genome/{espece}/{assemblie}DNAZoo.fasta",
+#		"/media/newvol/yascimkamel/Pipeline/genome/{espece}/{espece}_{BD}DNAZoo.fasta",
 #	output:
-#		"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}DNAZoo.fasta"
+#		"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}DNAZoo.fasta"
 #	shell:
 #		"cp {input} {output}"
 
 #rule copy_NCBI :
 #        input:
-#                "/media/newvol/yascimkamel/Pipeline/genome/{espece}/{assemblie}NCBI.fna"
+#                "/media/newvol/yascimkamel/Pipeline/genome/{espece}/{espece}_{BD}NCBI.fna"
 #        output:
-#                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}NCBI.fna"
+#                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}NCBI.fna"
 #        shell:
 #                "cp {input} {output}"
 
 #rule uncompress :
 #	input: 
-#		"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblie}.gz"
+#		"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}.gz"
 #	output: 
 #		"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{assemblage}"
 #	shell: 
@@ -103,18 +125,18 @@ rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un as
 
 #rule read_NCBI: 
 #	input : 
-#		"/media/newvol/yascimkamel/Pipeline/genome/{espece}/{assemblie}NCBI.fasta"
+#		"/media/newvol/yascimkamel/Pipeline/genome/{espece}/{espece}_{BD}NCBI.fasta"
 #	output :
-#		"/media/newvol/yascimkamel/Pipeline/Snakemake/{espece}/read/{assemblie}NCBI_read.txt" 
+#		"/media/newvol/yascimkamel/Pipeline/Snakemake/{espece}/read/{espece}_{BD}NCBI_read.txt" 
 #	shell: 
 #		"wc -l {input} > {output}"
 
 
 #rule read_DNA:
  #       input :
-  #              "/media/newvol/yascimkamel/Pipeline/genome/{espece}/{assemblie}DNAZoo.fasta"
+  #              "/media/newvol/yascimkamel/Pipeline/genome/{espece}/{espece}_{BD}DNAZoo.fasta"
   #      output :
-  #              "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/read/{assemblie}DNAZoo_read.txt"
+  #              "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/read/{espece}_{BD}DNAZoo_read.txt"
    #     shell:
     #            "wc -l {input} > {output}"
 
@@ -123,10 +145,10 @@ rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un as
 
     #rule merge_read:
 #	    input :
-#	            "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/read/{assemblie}DNAZoo_read.txt",
-#	            "/media/newvol/yascimkamel/Pipeline/Snakemake/{espece}/read/{assemblie}NCBI_read.txt"
+#	            "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/read/{espece}_{BD}DNAZoo_read.txt",
+#	            "/media/newvol/yascimkamel/Pipeline/Snakemake/{espece}/read/{espece}_{BD}NCBI_read.txt"
 #	    output :
-#	            "/media/newvol/yascimkamel/Pipeline/Snakemake/{espece}/read/{assemblie}all_read.txt"
+#	            "/media/newvol/yascimkamel/Pipeline/Snakemake/{espece}/read/{espece}_{BD}all_read.txt"
 #	    shell:
 #	            "cat{input} >> {output}"
 #	            "rm {input}"
