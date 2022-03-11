@@ -32,13 +32,13 @@ rule all:
 #                "wc -l {input} > {output}"
 
 
- rule busco :
-         input:
+rule busco :
+        input:
                 expand("/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta", espece=ESPECES,BD=liste_BD)
-         output:
-                #"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO"
+        output:
+#"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO"
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/busco_clear.txt"
-         shell: 
+        shell: 
                 "busco -m genome -i {input} -o /media/newvol/yascimkamel/Pipeline/Snakemake/copie/{wildcard.espece}/{wildcard.espece}_{wildcard.BD}_BUSCO -l cetartiodactyla_odb10 --cpu=8"
                 "echo 'analyse busco effectuée' >> {output}"
 
