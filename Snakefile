@@ -12,7 +12,7 @@ liste_BD = ["DNAZoo", "NCBI"]
 
 rule all:
         input:
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/busco_clear.txt"
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/final.txt"
 
 
 #rule copy : ### Permet de copier les génomes
@@ -34,14 +34,20 @@ rule all:
 
 rule busco :
         input:
-                expand("/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta", espece=ESPECES,BD=liste_BD)
+                "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta",
         output:
-#"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO"
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/busco_clear.txt"
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO"
+
         shell: 
                 "busco -m genome -i {input} -o /media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO -l cetartiodactyla_odb10 --cpu=8"
-                "echo 'analyse busco effectuée' >> {output}"
 
+rule fin : 
+        input :
+                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO", espece=ESPECES,BD=liste_BD)
+        output: 
+                " /media/newvol/yascimkamel/Pipeline/Snakemake/copie/busco_clear.txt"
+        shell : 
+                "echo 'les fichiers suivants ont été générés \n' > {output} | echo {input} >> {output}"
 rule augustus :
         input : 
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_f.fasta"
