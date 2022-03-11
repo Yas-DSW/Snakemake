@@ -45,7 +45,7 @@ rule fin :
         input :
                 expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO", espece=ESPECES,BD=liste_BD)
         output: 
-                " /media/newvol/yascimkamel/Pipeline/Snakemake/copie/busco_clear.txt"
+                " /media/newvol/yascimkamel/Pipeline/Snakemake/copie/final.txt"
         shell : 
                 "echo 'les fichiers suivants ont été générés \n' > {output} | echo {input} >> {output}"
 rule augustus :
