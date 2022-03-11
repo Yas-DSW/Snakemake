@@ -12,7 +12,7 @@ liste_BD = ["DNAZoo", "NCBI"]
 
 rule all:
         input:
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/count_ligne_number.txt"
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/busco_clear.txt"
 
 
 #rule copy : ### Permet de copier les génomes
@@ -40,7 +40,7 @@ rule all:
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/busco_clear.txt"
          shell: 
                 "busco -m genome -i {input} -o /media/newvol/yascimkamel/Pipeline/Snakemake/copie/{wildcard.espece}/{wildcard.espece}_{wildcard.BD}_BUSCO -l cetartiodactyla_odb10 --cpu=8"
-                "echo 'analyse busco effectuée >> {output}"
+                "echo 'analyse busco effectuée' >> {output}"
 
 rule augustus :
         input : 
