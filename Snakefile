@@ -15,34 +15,36 @@ rule all:
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/count_ligne_number.txt"
 
 
-rule copy : ### Permet de copier les génomes
-	input: 
-	       "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta" 
-	output:
-              "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta"
-	shell:
-                "cp {input} {output} "
+#rule copy : ### Permet de copier les génomes
+#	input: 
+#	       "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta" 
+#	output:
+#             "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta"
+#	shell:
+#                "cp {input} {output} "
 
-rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un assemblage
-        input :
-                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta", espece=ESPECES,BD=liste_BD)
-        output :
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/count_ligne_number.txt"
-        shell:
-                "wc -l {input} > {output}"
+#rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un assemblage
+#        input :
+#                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta", espece=ESPECES,BD=liste_BD)
+#        output :
+#                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/count_ligne_number.txt"
+#        shell:
+#                "wc -l {input} > {output}"
 
 
  rule busco :
          input:
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta"
+                expand("/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta", espece=ESPECES,BD=liste_BD)
          output:
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO"
+                #"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO"
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/busco_clear.txt"
          shell: 
-                "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 --cpu=8"
+                "busco -m genome -i {input} -o /media/newvol/yascimkamel/Pipeline/Snakemake/copie/{wildcard.espece}/{wildcard.espece}_{wildcard.BD}_BUSCO -l cetartiodactyla_odb10 --cpu=8"
+                "echo 'analyse busco effectuée >> {output}"
 
 rule augustus :
         input : 
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta"
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_f.fasta"
         output:
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}.gff"
         shell : 
@@ -56,7 +58,8 @@ rule bedtools :
         output:
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_OR.fasta"
         shell: 
-                "bedtools getfasta -fo {output} -fi {fasta} -bed {gff} "
+                "bedtools getfasta -fo /media/newvol/yascimkamel/Pipeline/Snakemake/copie/{wildcard.espece}/{wildcard.espece}_{woldcard.BD}_OR.fasta -fi {fasta} -bed {gff} "
+
 rule ORA
         input:
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_OR.fasta"
