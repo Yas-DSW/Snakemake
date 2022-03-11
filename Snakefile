@@ -39,7 +39,7 @@ rule busco :
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO"
 
         shell: 
-                "busco -m genome -i {input} -o /media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO -l cetartiodactyla_odb10 --cpu=8"
+                "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 --cpu=8"
 
 rule fin : 
         input :
