@@ -6,8 +6,8 @@
 #		"données.txt"
 #	shell: 
 #		"python3 recup_lien.py {input} > {output}"
-ESPECES=["Globicephala_melas", "Tursiop_truncatus","Megaptera_novaeangliae"]
-liste_BD = ["DNAZoo", "NCBI"]
+espece=["Globicephala_melas", "Tursiop_truncatus","Megaptera_novaeangliae"]
+BD= ["DNAZoo", "NCBI"]
 
 
 rule all:
@@ -34,7 +34,7 @@ rule all:
 
 rule busco :
         input:
-                expand("/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta", espece=ESPECES,BD=liste_BD)
+                "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta",
         output:
 #"/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO"
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/busco_clear.txt"
