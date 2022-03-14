@@ -50,15 +50,23 @@ rule augustus :
         shell : 
                 "augustus --species=human  {input} > {output}"
 
+rule fin : 
+        input :
+                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}.gff", espece=ESPECES,BD=liste_BD)
+        output: 
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/final.txt"
+        shell : 
+                "echo 'les fichiers suivants ont été générés \n' > {output} | echo {input} >> {output}"
+
 
 rule bedtools : 
         input: 
-                fasta="/media/newvol/yascimkamel/Pipeline/genome//copie/{espece}/{espece}_{BD}_f.fasta", 
+                fasta="/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_copied.fasta", 
                 gff="/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}.gff"
         output:
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_OR.fasta"
         shell: 
-                "bedtools getfasta -fo /media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_OR.fasta -fi {input.fasta} -bed {input.gff} "
+                "bedtools getfasta -fo /media/newvol/yascimkamel/Pipeline/Snakemake/copie/{wildcard.espece}/{wildcard.espece}_{woldcard.BD}_OR.fasta -fi {fasta} -bed {gff} "
 rule fin : 
         input :
                 expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_OR.fasta", espece=ESPECES,BD=liste_BD)
