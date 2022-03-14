@@ -41,13 +41,7 @@ rule busco :
         shell: 
                 "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 --cpu=8"
 
-rule fin : 
-        input :
-                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO", espece=ESPECES,BD=liste_BD)
-        output: 
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/final.txt"
-        shell : 
-                "echo 'les fichiers suivants ont été générés \n' > {output} | echo {input} >> {output}"
+
 rule augustus :
         input : 
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_f.fasta"
@@ -55,6 +49,14 @@ rule augustus :
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}.gff"
         shell : 
                 "augustus --species=human  {input} > {output}"
+
+rule fin : 
+        input :
+                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}.gff", espece=ESPECES,BD=liste_BD)
+        output: 
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/final.txt"
+        shell : 
+                "echo 'les fichiers suivants ont été générés \n' > {output} | echo {input} >> {output}"
 
 
 rule bedtools : 
