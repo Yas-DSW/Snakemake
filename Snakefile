@@ -67,13 +67,7 @@ rule bedtools :
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_OR.fasta"
         shell: 
                 "bedtools getfasta -fo /media/newvol/yascimkamel/Pipeline/Snakemake/copie/{wildcard.espece}/{wildcard.espece}_{woldcard.BD}_OR.fasta -fi {fasta} -bed {gff} "
-rule fin : 
-        input :
-                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_OR.fasta", espece=ESPECES,BD=liste_BD)
-        output: 
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/final.txt"
-        shell : 
-                "echo 'les fichiers suivants ont été générés \n' > {output} | echo {input} >> {output}"
+
 
 rule ORA:
         input:
