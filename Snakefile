@@ -38,7 +38,7 @@ rule busco_line :
 
 rule busco :
         input : 
-                expand("/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_BUSCO", espece=ESPECES, BD=liste_BD)
+                expand(directory("/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_BUSCO"), espece=ESPECES, BD=liste_BD)
         output: 
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/final_busco.txt"
         shell : 
