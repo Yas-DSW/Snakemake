@@ -25,20 +25,28 @@ rule all:
 #                "wc -l {input} > {output}"
 
 
-rule busco_line :
-        input:
-                "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}.fasta"
-        output:
-                directory("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO")
-
-        shell: 
-                "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 --cpu= 8"
+rule run_busco:
+    input:
+        "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}.fasta"
+    output:
+        directory("/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_busco")
+    log:
+        "logs/quality/genome_{espece}_{BD}_busco.log"
+    threads: 8
+    params:
+        mode="genome",
+        lineage="cetartiodactyla_odb10",
+        downloads_path="~/Pipeline/Snakemake/busco_downloads",
+        # optional parameters
+        extra="--cpu= 8"
+    wrapper:
+        "v5.2.2/bio/busco"
 
 
 
 rule busco :
         input : 
-                expand("/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}.fasta", espece=ESPECES, BD=liste_BD)
+                expand("/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_busco", espece=ESPECES, BD=liste_BD)
         output: 
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/final_busco.txt"
         shell : 
