@@ -38,19 +38,26 @@ rule run_busco:
         lineage="cetartiodactyla_odb10",
         downloads_path="~/Pipeline/Snakemake/busco_downloads",
         # optional parameters
-        extra=
-    wrapper:
-        "v1.2.2/bio/busco"
+        extra=""
+    shell:
+        "busco -m {parms.genome} -i {input} -o {output} -l {params.lineage} "
 
+# rule busco_line :
+#         input:
+#                 "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}.fasta"
+#         output:
+#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO"
 
+#         shell: 
+#                 "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 --cpu= 8"
 
 rule busco :
         input : 
-                expand("/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_busco", espece=ESPECES, BD=liste_BD)
+                expand("logs/quality/genome_{espece}_{BD}_busco.log", espece=ESPECES, BD=liste_BD)
         output: 
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/final_busco.txt"
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/log_merged.txt"
         shell : 
-                "echo 'Busco fini' > {output}"
+                "echo input > {output}"
 
 
 rule augustus :
