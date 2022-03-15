@@ -57,7 +57,7 @@ rule augustus :
 
 rule bedtools : 
         input: 
-                fasta="/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_f.fasta", 
+                fasta="/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta", 
                 gff="/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}.gff"
         output:
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_OR.fasta"
