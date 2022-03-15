@@ -1,11 +1,4 @@
 
-#rule read_csv : 
-#	input: 
-#		"données/données.csv"
-#	output: 
-#		"données.txt"
-#	shell: 
-#		"python3 recup_lien.py {input} > {output}"
 ESPECES=["Globicephala_melas", "Tursiop_truncatus","Megaptera_novaeangliae"]
 liste_BD = ["DNAZoo", "NCBI"]
 
@@ -38,7 +31,7 @@ rule run_busco:
     output:
         directory("/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_busco")
     log:
-        "logs/quality/transcriptome_busco.log"
+        "logs/quality/genome_{espece}_{BD}_busco.log"
     threads: 8
     params:
         mode="genome",
@@ -118,7 +111,13 @@ rule ORA:
 
 ################################################################# Rules abandonnées ############################################################## 
 
-
+#rule read_csv : 
+#       input: 
+#               "données/données.csv"
+#       output: 
+#               "données.txt"
+#       shell: 
+#               "python3 recup_lien.py {input} > {output}"
 
 #rule name_recuperation :
 #	input: "/media/newvol/yascimkamel/genome/{espece}"
