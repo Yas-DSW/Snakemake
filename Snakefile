@@ -25,7 +25,7 @@ rule all:
 #                "wc -l {input} > {output}"
 
 
- rule busco_line :
+rule busco_line :
         input:
                 "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}.fasta"
         output:
