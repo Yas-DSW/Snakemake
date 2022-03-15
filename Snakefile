@@ -34,7 +34,7 @@ rule all:
 
 rule busco_line :
         input:
-                "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta"
+                "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}.fasta"
         output:
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO"
 
