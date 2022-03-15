@@ -50,15 +50,15 @@ rule augustus :
         input : 
                 "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta"
         output:
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}.gff"
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/sortie_augustus/{espece}_{BD}.gff"
         shell : 
                 "augustus --species=human  {input} > {output}"
 
 
 rule bedtools : 
         input: 
-                fasta="/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta", 
-                gff="/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}.gff"
+                fasta="/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/sortie_augustus/{espece}_{BD}_f.fasta", 
+                gff="/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/sortie_bedtools/{espece}_{BD}.gff"
         output:
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_OR.fasta"
         shell: 
