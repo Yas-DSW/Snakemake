@@ -36,14 +36,6 @@ rule run_busco:
     shell:
         "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 "
 
-# rule busco_line :
-#         input:
-#                 "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}.fasta"
-#         output:
-#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO"
-
-#         shell: 
-#                 "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 --cpu= 8"
 
 rule busco :
         input : 
@@ -56,7 +48,7 @@ rule busco :
 
 rule augustus :
         input : 
-                "/media/newvol/yascimkamel/Pipeline/genome//copie/{espece}/{espece}_{BD}_f.fasta"
+                "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta"
         output:
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}.gff"
         shell : 
@@ -78,7 +70,10 @@ rule bedtools :
         output:
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_OR.fasta"
         shell: 
-                "bedtools getfasta -fo /media/newvol/yascimkamel/Pipeline/Snakemake/copie/{wildcard.espece}/{wildcard.espece}_{woldcard.BD}_OR.fasta -fi {fasta} -bed {gff} "
+                "bedtools getfasta "
+                "-fo /media/newvol/yascimkamel/Pipeline/Snakemake/copie/{wildcard.espece}/{wildcard.espece}_{wildcard.BD}_OR.fasta "
+                "-fi {fasta} "
+                "-bed {gff}"
 
 
 rule ORA:
@@ -182,6 +177,15 @@ rule ORA:
 #	    shell:
 #	            "cat{input} >> {output}"
 #	            "rm {input}"
+
+# rule busco_line :
+#         input:
+#                 "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}.fasta"
+#         output:
+#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO"
+
+#         shell: 
+#                 "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 --cpu= 8"
 
 # rule busco_line :
 #         input:
