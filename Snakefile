@@ -38,9 +38,9 @@ rule run_busco:
         lineage="cetartiodactyla_odb10",
         downloads_path="~/Pipeline/Snakemake/busco_downloads",
         # optional parameters
-        extra="--cpu= 8"
+        extra=
     wrapper:
-        "v5.2.2/bio/busco"
+        "v1.2.2/bio/busco"
 
 
 
