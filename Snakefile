@@ -68,7 +68,7 @@ rule bedtools :
                 "-bed {input.gff}"
 rule fin : 
         input :
-                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_OR.fasta", espece=ESPECES,BD=liste_BD)
+                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/sortie_bedtools/{espece}_{BD}_OR.fasta", espece=ESPECES,BD=liste_BD)
         output: 
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/final.txt"
         shell : 
