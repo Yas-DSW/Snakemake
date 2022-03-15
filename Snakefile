@@ -10,7 +10,7 @@ rule all:
 
 #rule copy : ### Permet de donneesr les génomes
 #	input: 
-#	       "/media/newvol/yascimkamel/Pipeline/genome/donnees/{espece}/{espece}_{BD}_f.fasta" 
+#	       "/media/newvol/yascimkamel/Pipeline/genome/donnees/{espece}/{espece}_{BD}.fasta" 
 #	output:
 #             "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/{espece}_{BD}_donneesd.fasta"
 #	shell:
@@ -48,7 +48,7 @@ rule busco :
 
 rule augustus :
         input : 
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/{espece}_{BD}_f.fasta"
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/{espece}_{BD}.fasta"
         output:
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/sortie_augustus/{espece}_{BD}.gff"
         shell : 
@@ -57,7 +57,7 @@ rule augustus :
 
 rule bedtools : 
         input: 
-                fasta="/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/{espece}_{BD}_f.fasta", 
+                fasta="/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/{espece}_{BD}.fasta", 
                 gff="/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/sortie_augustus/{espece}_{BD}.gff"
         output:
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/sortie_bedtools/{espece}_{BD}_OR.fasta"
