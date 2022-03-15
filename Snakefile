@@ -33,14 +33,8 @@ rule run_busco:
     log:
         "logs/quality/genome_{espece}_{BD}_busco.log"
     threads: 8
-    params:
-        mode="genome",
-        lineage="cetartiodactyla_odb10",
-        downloads_path="~/Pipeline/Snakemake/busco_downloads",
-        # optional parameters
-        extra=""
     shell:
-        "busco -m {parms.mode} -i {input} -o {output} -l {params.lineage} "
+        "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 "
 
 # rule busco_line :
 #         input:
