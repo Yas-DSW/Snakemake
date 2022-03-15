@@ -40,7 +40,7 @@ rule run_busco:
         # optional parameters
         extra=""
     shell:
-        "busco -m {parms.genome} -i {input} -o {output} -l {params.lineage} "
+        "busco -m {parms.mode} -i {input} -o {output} -l {params.lineage} "
 
 # rule busco_line :
 #         input:
