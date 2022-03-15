@@ -63,7 +63,7 @@ rule bedtools :
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_OR.fasta"
         shell: 
                 "bedtools getfasta "
-                "-fo /media/newvol/yascimkamel/Pipeline/Snakemake/copie/{wildcard.espece}/{wildcard.espece}_{wildcard.BD}_OR.fasta "
+                "-fo /media/newvol/yascimkamel/Pipeline/Snakemake/copie/{wildcards.espece}/{wildcards.espece}_{wildcards.BD}_OR.fasta "
                 "-fi {fasta} "
                 "-bed {gff}"
 rule fin : 
