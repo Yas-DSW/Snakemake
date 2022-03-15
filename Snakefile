@@ -32,14 +32,23 @@ rule all:
 #                "wc -l {input} > {output}"
 
 
-rule busco :
+rule busco_line :
         input:
-                "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta",
+                "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta"
         output:
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO"
 
         shell: 
-                "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 --cpu=8"
+                "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 --cpu= 8"
+rule busco :
+        input : 
+                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO", espece=ESPECES, BD=liste_BD)
+        output: 
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/final_busco.txt"
+        shell : 
+                "echo 'Busco fini' > {output}"
+
+
 
 
 rule augustus :
