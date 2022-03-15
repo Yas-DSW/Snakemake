@@ -64,8 +64,8 @@ rule bedtools :
         shell: 
                 "bedtools getfasta "
                 "-fo {output} "
-                "-fi {fasta} "
-                "-bed {gff}"
+                "-fi {input.fasta} "
+                "-bed {input.gff}"
 rule fin : 
         input :
                 expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_OR.fasta", espece=ESPECES,BD=liste_BD)
