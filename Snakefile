@@ -54,14 +54,6 @@ rule augustus :
         shell : 
                 "augustus --species=human  {input} > {output}"
 
-rule fin : 
-        input :
-                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}.gff", espece=ESPECES,BD=liste_BD)
-        output: 
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/final.txt"
-        shell : 
-                "echo 'les fichiers suivants ont été générés \n' > {output} | echo {input} >> {output}"
-
 
 rule bedtools : 
         input: 
@@ -74,7 +66,13 @@ rule bedtools :
                 "-fo /media/newvol/yascimkamel/Pipeline/Snakemake/copie/{wildcard.espece}/{wildcard.espece}_{wildcard.BD}_OR.fasta "
                 "-fi {fasta} "
                 "-bed {gff}"
-
+rule fin : 
+        input :
+                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_OR.fasta", espece=ESPECES,BD=liste_BD)
+        output: 
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/final.txt"
+        shell : 
+                "echo 'les fichiers suivants ont été générés \n' > {output} | echo {input} >> {output}"
 
 rule ORA:
         input:
