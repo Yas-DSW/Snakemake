@@ -29,7 +29,7 @@ rule run_busco:
     input:
         "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}.fasta"
     output:
-        directory("/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_busco")
+        directory("{espece}_{BD}_busco")
     log:
         "logs/quality/genome_{espece}_{BD}_busco.log"
     threads: 8
