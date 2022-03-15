@@ -57,10 +57,10 @@ rule augustus :
 
 rule bedtools : 
         input: 
-                fasta="/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/sortie_augustus/{espece}_{BD}_f.fasta", 
-                gff="/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/sortie_bedtools/{espece}_{BD}.gff"
+                fasta="/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}_f.fasta", 
+                gff="/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/sortie_augustus/{espece}_{BD}.gff"
         output:
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_OR.fasta"
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/sortie_bedtools/{espece}_{BD}_OR.fasta"
         shell: 
                 "bedtools getfasta "
                 "-fo {output} "
