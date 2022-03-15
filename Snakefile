@@ -32,23 +32,32 @@ rule all:
 #                "wc -l {input} > {output}"
 
 
-rule busco_line :
-        input:
-                "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}.fasta"
-        output:
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO"
+rule run_busco:
+    input:
+        "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}.fasta"
+    output:
+        directory("{espece}_{BD}_busco")
+    log:
+        "logs/quality/transcriptome_busco.log"
+    threads: 8
+    params:
+        mode="genome",
+        lineage="cetartiodactyla_odb10",
+        downloads_path="~/Pipeline/Snakemake/busco_downloads",
+        # optional parameters
+        extra="--cpu= 8"
+    wrapper:
+        "v1.2.1/bio/busco"
 
-        shell: 
-                "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 --cpu= 8"
+
+
 rule busco :
         input : 
-                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO", espece=ESPECES, BD=liste_BD)
+                expand("{espece}_{BD}_busco", espece=ESPECES, BD=liste_BD)
         output: 
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/final_busco.txt"
         shell : 
                 "echo 'Busco fini' > {output}"
-
-
 
 
 rule augustus :
@@ -174,3 +183,11 @@ rule ORA:
 #	            "cat{input} >> {output}"
 #	            "rm {input}"
 
+# rule busco_line :
+#         input:
+#                 "/media/newvol/yascimkamel/Pipeline/genome/copie/{espece}/{espece}_{BD}.fasta"
+#         output:
+#                 "/media/newvol/yascimkamel/Pipeline/Snakemake/copie/{espece}/{espece}_{BD}_BUSCO"
+
+#         shell: 
+#                 "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 --cpu= 8"
