@@ -45,7 +45,7 @@ rule all:
 ## Les tests ont été effectué sur busco v5.2.2. 
 rule run_busco:
     input:
-        "/media/newvol/yascimkamel/Pipeline/genome/donnees/{espece}/{espece}_{BD}.fasta"
+        "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/{espece}_{BD}.fasta"
     output:
         directory("{espece}_{BD}_busco")
     log:
@@ -97,7 +97,8 @@ rule bedtools :
                 "-bed {input.gff}"
 rule fin : 
         input :
-                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/sortie_bedtools/{espece}_{BD}_OR.fasta", espece=ESPECES,BD=liste_BD)
+                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/sortie_bedtools/{espece}_{BD}_OR.fasta", espece=ESPECES,BD=liste_BD),
+                "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/log_merged.txt"
         output: 
                 "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/final.txt"
         shell : 
