@@ -1,0 +1,4 @@
+canaux : 
+ -  bedtools
+dépendances : 
+ -  bedtools=2.27.1 

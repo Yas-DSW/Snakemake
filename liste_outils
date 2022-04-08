@@ -3,7 +3,7 @@ Comparaison des otils présenté dans l'étude Benchmark (https://bmcgenomics.bi
 
 
 Augustus: (+) = Sensible et spécifique avec 
-		  (-) = plus grand temps CPU (3.4 fois plus que les GlimmerHMM soit 1 h pour traiter les 87 Mo) ; Nombre d'exon prédit tout de même bas (60-70 % d'exons manquant)
+		  (-) = plus grand temps CPU (3.4 fois plus que les GlimmerHMM soit genes  ; Nombre d'exon prédit tout de même bas (60-70 % d'exons manquant)
 
 Genscan: (+) = Résultats proches de Augustus (légérement plus d'exons mal prédit et pas prédit)
 		 (-) = 
@@ -28,12 +28,12 @@ Facteurs à prendre en compte :
 		-> optimisé pour des exons de 50 à 200 nucléotides
 
 
-		Audustus possède plus de 100 modèles d'espèces différentes tandis que Genscan n'en a que trois
+		Augustus possède plus de 100 modèles d'espèces différentes tandis que Genscan n'en a que trois
 
 
 -------------------------------------------------------------------------------------------------
 
-Installatio Genscan : 
+Installation Genscan : 
 
 Nécessite un contrat académique : voir : http://hollywood.mit.edu/license.html
 
@@ -43,4 +43,12 @@ Installation GlimmerHMM :
 
 Archive disponible sur : https://ccb.jhu.edu/software/glimmerhmm/
 
---> Rq Il doit être entrainé en amont
+--> Rq : Il doit être entrainé en amont
+
+Installation de genID : 
+
+Archive disponible sur : https://genome.crg.es/software/geneid/index.html#top
+--> possibilité d'entraîner de nouvelles espèce (génération de matrice de poid assoiées au position)
+
+Snap : 
+--> https://github.com/KorfLab/SNAP

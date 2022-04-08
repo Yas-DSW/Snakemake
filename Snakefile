@@ -6,14 +6,15 @@
 #######                                                                                                                 ###################
 ###########################################################################################################################################
 ###########################################################################################################################################
-
+from Bio import SeqIO
 
 
 ## La liste ci-dessous correspond à la liste des espèce et des différentes bases de données utilisées. IL est possible d'ajouter
 ## des espèces et bases de données, cependant les espèces listées doivent se trouver dans toute les bases de données.
 
 
-ESPECES=["Globicephala_melas", "Tursiop_truncatus","Megaptera_novaeangliae"]
+ESPECES=["Globicephala_melas"]
+# "Tursiop_truncatus","Megaptera_novaeangliae"]
 liste_BD = ["DNAZoo", "NCBI"]
 
 
@@ -21,99 +22,144 @@ liste_BD = ["DNAZoo", "NCBI"]
 ## Cette règle contient en entrée le dernier fichier généré par le pipeline. Il permet d'automatiser le lancement de ce dernier.
 rule all:
         input:
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/final.txt"
+                expand("sorties/{espece}/ORA/{espece}_{BD}_OR_list.fa", espece=ESPECES,BD=liste_BD),
+                expand("sorties/{espece}/score_busco/{espece}_{BD}_busco/short_summary.specific.cetartiodactyla_odb10.sortie.txt", espece=ESPECES,BD=liste_BD)
 
+### Cette règle permet de modifier le CSV d'entrée pour qu'il soit rempli après.
 
-#rule copy : ### Permet de donneesr les génomes
-#	input: 
-#	       "/media/newvol/yascimkamel/Pipeline/genome/donnees/{espece}/{espece}_{BD}.fasta" 
-#	output:
-#             "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/{espece}_{BD}_donneesd.fasta"
-#	shell:
-#                "cp {input} {output} "
-
-#rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un assemblage
-#        input :
-#                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/{espece}_{BD}_donneesd.fasta", espece=ESPECES,BD=liste_BD)
-#        output :
-#                "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/count_ligne_number.txt"
-#        shell:
-#                "wc -l {input} > {output}"
+rule modif_CSV : 
+        input: 
+                "../donnees/données.csv"
+        output : 
+                "../donnees/données_modified.csv"
+        shell : 
+                "python3 Modif_CSV.py"
+                " {input}"
+                " {output}"
 
 
 ### run_busco permet de calculer le score Busco grâce à l'outil du même nom. Ce score permet d'évaluer l'intégralité d'un génome au format fasta.  
 ## Les tests ont été effectué sur busco v5.2.2. 
 rule run_busco:
-    input:
-        "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/{espece}_{BD}.fasta"
-    output:
-        directory("{espece}_{BD}_busco")
-    log:
-        "logs/quality/genome_{espece}_{BD}_busco.log"
-    threads: 8
-    shell:
-        "busco -m genome -i {input} -o {output} -l cetartiodactyla_odb10 "
+        input:
+                "../donnees/{espece}/{espece}_{BD}.fasta"
+        output:
+        #directory("sorties/{espece}/score_busco/{espece}_{BD}_busco"),
+                "sorties/{espece}/score_busco/{espece}_{BD}_busco/short_summary.specific.cetartiodactyla_odb10.sortie.txt"
+        params:
+                directory = "{espece}_{BD}_busco"
+        # conda : 
+        #     "envs/busco.yml"     
+        log:
+                "logs/quality/genome_{espece}_{BD}_busco.log"
+        threads: 8 
+        shell:
+                "cd sorties |"
+                "busco -m genome -i {input} -o {params.directory} -l cetartiodactyla_odb10 "
 
 
 
-## Une règle busco a été ajoutée à la règle précédente pour permettre d'automatisé le lancement du calcul précédent. 
-## Il génére en sortie un fichier txt contenant tous les log générés. 
+## Une règle busco a été ajoutée à la règle précédente pour permettre d'automatiser le lancement du calcul précédent. 
+## Elle génére en sortie un fichier txt contenant tous les log générés. 
 rule busco :
         input : 
-                expand("logs/quality/genome_{espece}_{BD}_busco.log", espece=ESPECES, BD=liste_BD)
+                expand("sorties/{espece}/score_busco/{espece}_{BD}_busco/short_summary.specific.cetartiodactyla_odb10.sortie.txt", espece=ESPECES, BD=liste_BD)
         output: 
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/log_merged.txt"
+                "sorties/log_merged_busco.txt"
         shell : 
                 "echo {input} > {output}"
 
 
 
 
-### Cette règle permet d'utiliser l'outil augustus. C'est un outil ab initio qui génére un fichier au format gff contenant les coordonées génomiques 
+### Cette règle permet d'utiliser l'outil augustus. C'est un outil ab initio qui génère un fichier au format gff contenant les coordonées génomiques 
 ### des gènes potentiels contenu dans un génome au format fasta.
 rule augustus :
         input : 
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/{espece}_{BD}.fasta"
+                "../donnees/{espece}/{espece}_{BD}.fasta"
         output:
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/sortie_augustus/{espece}_{BD}.gff"
+                "sorties/{espece}/augustus/{espece}_{BD}.gff"
+        # conda : 
+        #         "envs/augustus.yaml" 
         shell : 
                 "augustus --species=human  {input} > {output}"
 
 
 
-### la fonction getfasta de bedtools permet de croiser un fichier des fichiers au format fasta et gff afin de pouvoir extraire les portions génomiques
-### correspondantes au format fasta. Cette étape est nécessaire en vu de l'utilisation du prochain outil. 
+### la fonction getfasta de bedtools permet de croiser des fichiers au format fasta et gff afin de pouvoir extraire les portions génomiques
+### correspondantes au format fasta. Cette étape est nécessaire en vue de l'utilisation du prochain outil. 
 
 rule bedtools : 
         input: 
-                fasta="/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/{espece}_{BD}.fasta", 
-                gff="/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/sortie_augustus/{espece}_{BD}.gff"
+                fasta="../donnees/{espece}/{espece}_{BD}.fasta", 
+                gff="sorties/{espece}/augustus/{espece}_{BD}.gff"
         output:
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/sortie_bedtools/{espece}_{BD}_OR.fasta"
+                "sorties/{espece}/bedtools/{espece}_{BD}_OR.fasta"
+        # conda : 
+        #         "envs/bedtools.yaml" 
         shell: 
                 "bedtools getfasta "
                 "-fo {output} "
                 "-fi {input.fasta} "
                 "-bed {input.gff}"
-rule fin : 
-        input :
-                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/sortie_bedtools/{espece}_{BD}_OR.fasta", espece=ESPECES,BD=liste_BD),
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/log_merged.txt"
+rule split:
+        input:
+                "sorties/{espece}/bedtools/{espece}_{BD}_OR.fasta"
         output: 
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/final.txt"
-        shell : 
-                "echo 'les fichiers suivants ont été générés \n' > {output} | echo {input} >> {output}"
+                "sorties/{espece}/bedtools/{espece}_{BD}_OR_lower_length.fasta",
+                "sorties/{espece}/bedtools/{espece}_{BD}_OR_upper_length.fasta"
+
+        run: 
+
+                with open(input[0],"r") as fasta_file :
+                        with open (output[0],"w") as sortie:
+                                with open (output[1],"w") as output_alternative:
+                                        for record in SeqIO.parse(fasta_file,"fasta"): 
+                                                if len(record.seq)<= 400:
+                                                        sortie.write('>'+ str(record.id)+'\n'+ str(record.seq)+ '\n')
+                                                else:
+                                                        output_alternative.write('>'+ str(record.id)+'\n'+ str(record.seq)+ '\n')
 
 
-## ORA est un outil permettant d'identifier les gènes étant des gènes Olfactif. Il utilise en entrée un fichier fasta. 
+## ORA est un outil permettant d'identifier les gènes étant des gènes olfactifs. Il utilise en entrée un fichier fasta. 
 rule ORA:
         input:
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/{espece}_{BD}_OR.fasta"
+                "sorties/{espece}/bedtools/{espece}_{BD}_OR_lower_length.fasta"
         output:
-                "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/recapitulatif.csv"
+                "sorties/{espece}/ORA/{espece}_{BD}_OR_list.fa"
         shell : 
-                "or.pl --format=csv --sequence={input}"
+                "or.pl --sequence={input}"
 
+# rule gene_number: 
+#         input:>
+#                 "sorties/{espece}/ORA/{espece}_{BD}_OR_list.fa"
+#         output:
+#                 "sorties/{espece}/ORA/{espece}_{BD}_gene_OR_number.txt"
+#         shell : 
+#                 "echo 'Le pipeline a détécté : \n' > {output} | "
+#                 "grep -c '>' {input} >> {output} | "
+#                 "echo '\n' >> {output}" 
+
+# rule fausse_fin : 
+#         input :
+#                 expand("sorties/{espece}/ORA/{espece}_{BD}_gene_OR_number.txt", espece=ESPECES,BD=liste_BD),
+#                 "sorties/log_merged_busco.txt"
+#         output: 
+#                 "../donnees/final.txt"
+#         shell : 
+#                 "echo 'les fichiers suivants ont été générés \n' > {output} | echo {input} >> {output} | echo '\n' >> {output}"
+
+##### Rules permettznt de remplir le CSV cavec les nombres de gènes et le score busco. 
+
+# # rule remplit_CSV : 
+# #         input : 
+# #                 tableau="/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/données_modified.csv", 
+#                   nb_gene="/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/recapitulatif.csv",
+#                   score_busco="{espece}_{BD}_busco/short_summary.specific.cetartiodactyla_odb10.{espece}_{BD}_busco.txt"
+# #         output : 
+# #                 "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/sortie.csv"
+# #         shell: 
+# #                 ""
 
 
 
@@ -128,7 +174,21 @@ rule ORA:
 #       shell: 
 #               "python3 recup_lien.py {input} > {output}"
 
+#rule copy : ### Permet de donneesr les génomes
+#       input: 
+#              "/media/newvol/yascimkamel/Pipeline/genome/donnees/{espece}/{espece}_{BD}.fasta" 
+#       output:
+#             "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/{espece}_{BD}_donneesd.fasta"
+#       shell:
+#                "cp {input} {output} "
 
+#rule read: # Permet d'indiquer dans un fichier txt le nombre de ligne pour un assemblage
+#        input :
+#                expand("/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/{espece}/{espece}_{BD}_donneesd.fasta", espece=ESPECES,BD=liste_BD)
+#        output :
+#                "/media/newvol/yascimkamel/Pipeline/Snakemake/donnees/count_ligne_number.txt"
+#        shell:
+#                "wc -l {input} > {output}"
 
 ## Le but de cette régle était de récupéré automatiquement les noms des espèces et bases de données directement dans un fichier au format CSV 
 #rule name_recuperation :

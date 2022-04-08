@@ -1,0 +1,4 @@
+canaux : 
+ -  augustus
+dépendances : 
+ -  augustus=3.3.3 

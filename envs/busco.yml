@@ -1,0 +1,4 @@
+canaux : 
+ -  BUSCO
+dépendances : 
+ -  BUSCO=5.2.2
