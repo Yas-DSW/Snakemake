@@ -7,7 +7,7 @@
 ###########################################################################################################################################
 ###########################################################################################################################################
 from Bio import SeqIO
-
+import csv
 
 ## La liste ci-dessous correspond à la liste des espèce et des différentes bases de données utilisées. IL est possible d'ajouter
 ## des espèces et bases de données, cependant les espèces listées doivent se trouver dans toute les bases de données.
@@ -15,27 +15,14 @@ from Bio import SeqIO
 
 ESPECES=["Globicephala_melas"]
 # "Tursiop_truncatus","Megaptera_novaeangliae"]
-liste_BD = ["DNAZoo", "NCBI"]
-
-
+liste_BD = ["DNAZoo","NCBI"]
 
 ## Cette règle contient en entrée le dernier fichier généré par le pipeline. Il permet d'automatiser le lancement de ce dernier.
 rule all:
         input:
                 expand("sorties/{espece}/ORA/{espece}_{BD}_OR_list.fa", espece=ESPECES,BD=liste_BD),
-                expand("sorties/{espece}/score_busco/{espece}_{BD}_busco/short_summary.specific.cetartiodactyla_odb10.sortie.txt", espece=ESPECES,BD=liste_BD)
-
-### Cette règle permet de modifier le CSV d'entrée pour qu'il soit rempli après.
-
-rule modif_CSV : 
-        input: 
-                "../donnees/données.csv"
-        output : 
-                "../donnees/données_modified.csv"
-        shell : 
-                "python3 Modif_CSV.py"
-                " {input}"
-                " {output}"
+                expand("{espece}_{BD}_busco/run_cetartiodactyla_odb10/short_summary.txt", espece=ESPECES,BD=liste_BD),
+                "../donnees/gene_completed.csv"
 
 
 ### run_busco permet de calculer le score Busco grâce à l'outil du même nom. Ce score permet d'évaluer l'intégralité d'un génome au format fasta.  
@@ -45,29 +32,28 @@ rule run_busco:
                 "../donnees/{espece}/{espece}_{BD}.fasta"
         output:
         #directory("sorties/{espece}/score_busco/{espece}_{BD}_busco"),
-                "sorties/{espece}/score_busco/{espece}_{BD}_busco/short_summary.specific.cetartiodactyla_odb10.sortie.txt"
+                "{espece}_{BD}_busco/run_cetartiodactyla_odb10/short_summary.txt"
         params:
                 directory = "{espece}_{BD}_busco"
         # conda : 
         #     "envs/busco.yml"     
-        log:
-                "logs/quality/genome_{espece}_{BD}_busco.log"
+        #log:
+        #        "logs/quality/genome_{espece}_{BD}_busco.log"
         threads: 8 
         shell:
-                "cd sorties |"
-                "busco -m genome -i {input} -o {params.directory} -l cetartiodactyla_odb10 "
+                "busco -f -m genome -i {input} -o {params.directory} -l cetartiodactyla_odb10"
 
 
 
 ## Une règle busco a été ajoutée à la règle précédente pour permettre d'automatiser le lancement du calcul précédent. 
 ## Elle génére en sortie un fichier txt contenant tous les log générés. 
-rule busco :
-        input : 
-                expand("sorties/{espece}/score_busco/{espece}_{BD}_busco/short_summary.specific.cetartiodactyla_odb10.sortie.txt", espece=ESPECES, BD=liste_BD)
-        output: 
-                "sorties/log_merged_busco.txt"
-        shell : 
-                "echo {input} > {output}"
+#rule busco :
+#        input : 
+#                expand("sorties/{espece}/score_busco/{espece}_{BD}_busco/short_summary.specific.cetartiodactyla_odb10.sortie.txt", espece=ESPECES, BD=liste_BD)
+#        output: 
+#                "sorties/log_merged_busco.txt"
+#        shell : 
+#                "echo {input} > {output}"
 
 
 
@@ -115,7 +101,7 @@ rule split:
                         with open (output[0],"w") as sortie:
                                 with open (output[1],"w") as output_alternative:
                                         for record in SeqIO.parse(fasta_file,"fasta"): 
-                                                if len(record.seq)<= 400:
+                                                if len(record.seq)<= 2500:
                                                         sortie.write('>'+ str(record.id)+'\n'+ str(record.seq)+ '\n')
                                                 else:
                                                         output_alternative.write('>'+ str(record.id)+'\n'+ str(record.seq)+ '\n')
@@ -128,7 +114,34 @@ rule ORA:
         output:
                 "sorties/{espece}/ORA/{espece}_{BD}_OR_list.fa"
         shell : 
-                "or.pl --sequence={input}"
+                "or.pl --sequence={input} > {output}"
+
+### Cette règle permet de modifier le CSV d'entrée pour qu'il soit rempli après.
+
+rule complete_gene : 
+        input: 
+                "../donnees/gene.csv"
+        output : 
+                "../donnees/gene_completed.csv"
+        run : 
+                data=csv.reader(open('tables_CSV/organisme.csv'))
+                out=csv.writer(open('organisme_completed.csv', 'w'))
+
+                for row in data: 
+                        out.writerow(row)
+
+                for espece in liste_espece : 
+                        esp=espece.split("_")
+                        ligne=[esp[0],esp[1],"","","","","","",""]
+
+                out.writerow(ligne)
+
+
+
+
+
+
+
 
 # rule gene_number: 
 #         input:>
