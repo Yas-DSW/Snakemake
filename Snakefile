@@ -208,7 +208,7 @@ rule complete_gene:
                                 if re.search ('OR\d*',header):
                                         family=re.search("OR\d*",header).group(0)
                                 if re.search('PSEUDOGENE',header):
-                                        state='Pseudogene'
+                                        state='Pseudogéne'
                                 else: 
                                         state='Géne fonctionnel'
                                 ligne=["à déterminer",family, state,ID]
