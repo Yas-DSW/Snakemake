@@ -8,6 +8,7 @@
 ###########################################################################################################################################
 from Bio import SeqIO
 import csv
+import re
 
 ## La liste ci-dessous correspond à la liste des espèce et des différentes bases de données utilisées. IL est possible d'ajouter
 ## des espèces et bases de données, cependant les espèces listées doivent se trouver dans toute les bases de données.
@@ -118,36 +119,115 @@ rule ORA:
 
 ### Cette règle permet de modifier le CSV d'entrée pour qu'il soit rempli après.
 
-rule complete_gene : 
+rule complete_organism : 
         input: 
-                "../donnees/gene.csv"
+                "../donnees/tables_CSV/organisme.csv"
         output : 
-                "../donnees/gene_completed.csv"
+                "sorties/tables_CSV/organisme_completed.csv"
         run : 
-                data=csv.reader(open('tables_CSV/organisme.csv'))
-                out=csv.writer(open('organisme_completed.csv', 'w'))
+                data=csv.reader(open(input[0]))
+                out=csv.writer(open(output[0], 'w'))
 
                 for row in data: 
                         out.writerow(row)
 
-                for espece in liste_espece : 
+                for espece in ESPECES : 
                         esp=espece.split("_")
                         ligne=[esp[0],esp[1],"","","","","","",""]
 
                 out.writerow(ligne)
 
+rule complete_assembly : 
+        input: 
+                "../donnees/tables_CSV/assemblie.csv", 
+                "../donnees/{espece}/{espece}_{BD}.fasta"
+        output: 
+                "sorties/assemblie_completed.csv"
+        run: 
+                data=csv.reader(open(input[0]))
+                out=csv.writer(open(output[0], 'w'))
+
+                for row in data: 
+                        out.writerow(row)
+
+                with open(input[1],"r"):        
+                for record in SeqIO.parse(input[1],"fasta"):
+                        ID=str(record.id)
+                        espece={wildcard.espece} 
+                        esp=espece.split("_")
+                        ligne=[ID,esp[0],esp[1],{wildcard.BD},"","","","",""]
+                
+                out.writerow(ligne)
+
+
+rule complete_experience:
+        input: 
+                "../donnees/tables_CSV/experience.csv", 
+                "../donnees/{espece}/{espece}_{BD}.fasta"
+        output: 
+                "sorties/experience_completed.csv"
+        run:
+
+                data=csv.reader(open(input[0]))
+                out=csv.writer(open(output[0], 'w'))
+
+                for row in data: 
+                        out.writerow(row)
+
+                with open(input[1],"r"):
+                for record in SeqIO.parse(input[1],"fasta"):
+                      ID=str(record.id)##Attention ici en raison de la boucle si le fichier fasta contient plusieurs génome seul le dernier sera considéré
+                      ligne=["",ID,'Pipeline de Yascim',""]
+
+                out.writerow(ligne)
+
+rule complete_gene:
+                input:
+                         "../donnees/tables_CSV/experience.csv", 
+                         "../donnees/{espece}/{espece}_{BD}.fasta",
+                         "sorties/{espece}/ORA/{espece}_{BD}_OR_list.fa"
+                output:
+                        "sorties/experience_completed.csv"
+                run:
+                        data=csv.reader(open(input[0]))
+                        out=csv.writer(open(output[0], 'w'))
+
+                        for row in data: 
+                                out.writerow(row)
+
+                        with open(input[1],"r"):
+                                for record in SeqIO.parse(input[1],"fasta"):
+                                        ID=str(record.id)
+                                        espece={wildcard.espece} 
+                                        esp=espece.split("_")
+                
+
+                        with open('ressources/Ora.fa',"r"):
+                                for record in SeqIO.parse('ressources/Ora.fa',"fasta"):
+                                    header=str(record.id)
+                                if re.search ('OR\d*',header):
+                                        family=re.search("OR\d*",header).group(0)
+                                if re.search('PSEUDOGENE',header):
+                                        state='Pseudogene'
+                                else: 
+                                        state='Géne fonctionnel'
+                                ligne=["à déterminer",family, state,ID]
+                                family=""
+                                state=""
+                                print(ligne)
+                                out.writerow(ligne)
 
 
 
 
-
+ 
 
 
 # rule gene_number: 
 #         input:>
 #                 "sorties/{espece}/ORA/{espece}_{BD}_OR_list.fa"
 #         output:
-#                 "sorties/{espece}/ORA/{espece}_{BD}_gene_OR_number.txt"
+#                 "sorties/{espece}/ORA/{espece}_{BD}_gene_OR_number.txt
 #         shell : 
 #                 "echo 'Le pipeline a détécté : \n' > {output} | "
 #                 "grep -c '>' {input} >> {output} | "
