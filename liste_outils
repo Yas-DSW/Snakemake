@@ -1,0 +1,54 @@
+Comparaison des otils présenté dans l'étude Benchmark (https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-020-6707-9) datant de 2020
+
+
+
+Augustus: (+) = Sensible et spécifique avec 
+		  (-) = plus grand temps CPU (3.4 fois plus que les GlimmerHMM soit genes  ; Nombre d'exon prédit tout de même bas (60-70 % d'exons manquant)
+
+Genscan: (+) = Résultats proches de Augustus (légérement plus d'exons mal prédit et pas prédit)
+		 (-) = 
+
+
+GlimmerHMM: (+) = bonne prédiction des proteines
+			(-) = lent
+GeneID : (+) = programme le plus rapide (87 Mo en 4 min)
+		 (-) = sensibilité et spécificité faible 
+
+Snap : (-) = sensibilité et spécificité faible
+
+
+
+Facteurs à prendre en compte : 
+		-> au niveau des exons la sensibilité varie peu pour Gensacan , Augustus et GlimmerHMM avec la longeur des régions flanquante
+
+		-> Marche mieux sur des régions avec plusieurs exons 
+
+		-> Les exons courts sont les moins bien prédit
+
+		-> optimisé pour des exons de 50 à 200 nucléotides
+
+
+		Augustus possède plus de 100 modèles d'espèces différentes tandis que Genscan n'en a que trois
+
+
+-------------------------------------------------------------------------------------------------
+
+Installation Genscan : 
+
+Nécessite un contrat académique : voir : http://hollywood.mit.edu/license.html
+
+
+
+Installation GlimmerHMM :
+
+Archive disponible sur : https://ccb.jhu.edu/software/glimmerhmm/
+
+--> Rq : Il doit être entrainé en amont
+
+Installation de genID : 
+
+Archive disponible sur : https://genome.crg.es/software/geneid/index.html#top
+--> possibilité d'entraîner de nouvelles espèce (génération de matrice de poid assoiées au position)
+
+Snap : 
+--> https://github.com/KorfLab/SNAP
