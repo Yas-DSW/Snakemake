@@ -21,7 +21,9 @@ liste_BD = ["DNAZoo","NCBI"]
 ## Cette règle contient en entrée le dernier fichier généré par le pipeline. Il permet d'automatiser le lancement de ce dernier.
 rule all:
         input:
-                expand("sorties/{espece}/ORA/{espece}_{BD}_OR_list.fa", espece=ESPECES,BD=liste_BD),
+                tmp("sorties/{espece}/complete_{espece}_{genre}_{BD}_{assemblie}_{score_busco}")
+
+                # expand("sorties/{espece}/ORA/{espece}_{BD}_OR_list.fa", espece=ESPECES,BD=liste_BD),
                 expand("{espece}_{BD}_busco/run_cetartiodactyla_odb10/short_summary.txt", espece=ESPECES,BD=liste_BD),
                 "../donnees/gene_completed.csv"
 
@@ -32,12 +34,9 @@ rule run_busco:
         input:
                 "../donnees/{espece}/{espece}_{BD}.fasta"
         output:
-        #directory("sorties/{espece}/score_busco/{espece}_{BD}_busco"),
-                "{espece}_{BD}_busco/run_cetartiodactyla_odb10/short_summary.txt"
+        tmp(directory("sorties/{espece}/score_busco/{espece}_{BD}_busco"))
         params:
-                directory = "{espece}_{BD}_busco"
-        # conda : 
-        #     "envs/busco.yml"     
+                directory = "{espece}_{BD}_busco"  
         #log:
         #        "logs/quality/genome_{espece}_{BD}_busco.log"
         threads: 8 
@@ -65,11 +64,19 @@ rule augustus :
         input : 
                 "../donnees/{espece}/{espece}_{BD}.fasta"
         output:
-                "sorties/{espece}/augustus/{espece}_{BD}.gff"
+                tmp("sorties/{espece}/augustus/{espece}_{BD}.gff")
         # conda : 
         #         "envs/augustus.yaml" 
         shell : 
                 "augustus --species=human  {input} > {output}"
+
+rule augustus_only_gene : 
+        input :
+                "sorties/{espece}/augustus/{espece}_{BD}.gff"
+        output:
+                "sorties/{espece}/augustus/{espece}_{BD}_genes.gff"
+        shell : 
+                "python3 extraction_line.py {input}"
 
 
 
@@ -79,9 +86,9 @@ rule augustus :
 rule bedtools : 
         input: 
                 fasta="../donnees/{espece}/{espece}_{BD}.fasta", 
-                gff="sorties/{espece}/augustus/{espece}_{BD}.gff"
+                gff="sorties/{espece}/augustus/{espece}_{BD}_genes.gff"
         output:
-                "sorties/{espece}/bedtools/{espece}_{BD}_OR.fasta"
+                tmp("sorties/{espece}/bedtools/{espece}_{BD}_OR.fasta")
         # conda : 
         #         "envs/bedtools.yaml" 
         shell: 
@@ -93,8 +100,8 @@ rule split:
         input:
                 "sorties/{espece}/bedtools/{espece}_{BD}_OR.fasta"
         output: 
-                "sorties/{espece}/bedtools/{espece}_{BD}_OR_lower_length.fasta",
-                "sorties/{espece}/bedtools/{espece}_{BD}_OR_upper_length.fasta"
+                tmp("sorties/{espece}/bedtools/{espece}_{BD}_OR_lower_length.fasta",)
+                "sorties/{espece}/bedtools/{espece}_{BD}_OR_superior_length.fasta"
 
         run: 
 
@@ -113,109 +120,24 @@ rule ORA:
         input:
                 "sorties/{espece}/bedtools/{espece}_{BD}_OR_lower_length.fasta"
         output:
-                "sorties/{espece}/ORA/{espece}_{BD}_OR_list.fa"
+                "sorties/{espece}/{espece}_{BD}_OR_list.fa"
         shell : 
                 "or.pl --sequence={input} > {output}"
 
 ### Cette règle permet de modifier le CSV d'entrée pour qu'il soit rempli après.
 
-rule complete_organism : 
-        input: 
-                "../donnees/tables_CSV/organisme.csv"
-        output : 
-                "sorties/tables_CSV/organisme_completed.csv"
-        run : 
-                data=csv.reader(open(input[0]))
-                out=csv.writer(open(output[0], 'w'))
+rule complete_BD :
+        input:  
+                multifasta="sorties/{espece}/bedtools/{espece}_{BD}_OR_lower_length.fasta",
 
-                for row in data: 
-                        out.writerow(row)
-
-                for espece in ESPECES : 
-                        esp=espece.split("_")
-                        ligne=[esp[0],esp[1],"","","","","","",""]
-
-                out.writerow(ligne)
-
-rule complete_assembly : 
-        input: 
-                "../donnees/tables_CSV/assemblie.csv", 
-                "../donnees/{espece}/{espece}_{BD}.fasta"
-        output: 
-                "sorties/assemblie_completed.csv"
-        run: 
-                data=csv.reader(open(input[0]))
-                out=csv.writer(open(output[0], 'w'))
-
-                for row in data: 
-                        out.writerow(row)
-
-                with open(input[1],"r"):        
-                for record in SeqIO.parse(input[1],"fasta"):
-                        ID=str(record.id)
-                        espece={wildcard.espece} 
-                        esp=espece.split("_")
-                        ligne=[ID,esp[0],esp[1],{wildcard.BD},"","","","",""]
-                
-                out.writerow(ligne)
+        output:
+                tmp("sorties/{espece}/complete_{espece}_{genre}_{BD}_{assemblie}_{score_busco}")
 
 
-rule complete_experience:
-        input: 
-                "../donnees/tables_CSV/experience.csv", 
-                "../donnees/{espece}/{espece}_{BD}.fasta"
-        output: 
-                "sorties/experience_completed.csv"
-        run:
+        shell :
+                "python3  ORA_to_BD.py {multifasta} {espece} {genre} {BD} {assemblie} {score_busco}"
 
-                data=csv.reader(open(input[0]))
-                out=csv.writer(open(output[0], 'w'))
 
-                for row in data: 
-                        out.writerow(row)
-
-                with open(input[1],"r"):
-                for record in SeqIO.parse(input[1],"fasta"):
-                      ID=str(record.id)##Attention ici en raison de la boucle si le fichier fasta contient plusieurs génome seul le dernier sera considéré
-                      ligne=["",ID,'Pipeline de Yascim',""]
-
-                out.writerow(ligne)
-
-rule complete_gene:
-                input:
-                         "../donnees/tables_CSV/experience.csv", 
-                         "../donnees/{espece}/{espece}_{BD}.fasta",
-                         "sorties/{espece}/ORA/{espece}_{BD}_OR_list.fa"
-                output:
-                        "sorties/experience_completed.csv"
-                run:
-                        data=csv.reader(open(input[0]))
-                        out=csv.writer(open(output[0], 'w'))
-
-                        for row in data: 
-                                out.writerow(row)
-
-                        with open(input[1],"r"):
-                                for record in SeqIO.parse(input[1],"fasta"):
-                                        ID=str(record.id)
-                                        espece={wildcard.espece} 
-                                        esp=espece.split("_")
-                
-
-                        with open('ressources/Ora.fa',"r"):
-                                for record in SeqIO.parse('ressources/Ora.fa',"fasta"):
-                                    header=str(record.id)
-                                if re.search ('OR\d*',header):
-                                        family=re.search("OR\d*",header).group(0)
-                                if re.search('PSEUDOGENE',header):
-                                        state='Pseudogéne'
-                                else: 
-                                        state='Géne fonctionnel'
-                                ligne=["à déterminer",family, state,ID]
-                                family=""
-                                state=""
-                                print(ligne)
-                                out.writerow(ligne)
 
 
 
