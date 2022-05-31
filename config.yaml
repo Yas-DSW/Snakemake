@@ -1,0 +1,35 @@
+---
+genomes_directory_path : "../donnees"
+Assemblies :
+  Globicephalas_melas_NCBI.fasta :
+                          Assemblie_name : "Globicephalas_melas_NCBI" 
+                          Genre : "Globicephalas"
+                          Specie : "melas"
+                          BD : "NCBI"
+  Globicephalas_melas_DNAZoo.fasta :
+                          Assemblie_name : "Globicephalas_melas_DNAZoo"
+                          Genre : "Globicephalas"
+                          Specie : "melas"
+                          BD : "DNAZoo"
+  Tursiop_truncatus_NCBI.fasta :
+                          Assemblie_name : "Tursiop_truncatus_NCBI"  
+                          Genre : "Tursiop"
+                          Specie : "truncatus"
+                          BD : "NCBI"
+  Tursiop_truncatus_DNAZoo.fasta :
+                          Assemblie_name : "Tursiop_truncatus_DNAZoo"
+                          Genre : "Tursiop"
+                          Specie : "truncatus"
+                          BD : "DNAZoo"
+  Megaptera_novangliae_NCBI.fasta : 
+                          Assemblie_name : "Megaptera_novangliae_NCBI"
+                          Genre : "Megaptera"
+                          Specie : "novangliae"
+                          BD : "NCBI"
+  Megaptera_novangliae_DNAZoo.fasta :
+                          Assemblie_name : "Megaptera_novangliae_DNAZoo"
+                          Genre : "Megaptera"
+                          Specie : "novangliae"
+                          BD : "DNAZoo"
+
+...

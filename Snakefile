@@ -9,20 +9,32 @@
 from Bio import SeqIO
 import csv
 import re
+import glob
 
 ## La liste ci-dessous correspond à la liste des espèce et des différentes bases de données utilisées. IL est possible d'ajouter
 ## des espèces et bases de données, cependant les espèces listées doivent se trouver dans toute les bases de données.
 
 
-ESPECES=["Globicephala_melas"]
-# "Tursiop_truncatus","Megaptera_novaeangliae"]
-liste_BD = ["DNAZoo","NCBI"]
+
+
+configfile="config.yaml"
+files_paths_list= glob.glob(config["genomes_directory_path"] + "/*.fa")
+
+files_list=[]
+for paths in list:
+        file_name=re.sub.(config["genomes_directory_path"]+"/", '', paths)
+        files_list.append(file_name)
+
+
+# ESPECES=["Globicephala_melas"]
+# # "Tursiop_truncatus","Megaptera_novaeangliae"]
+# liste_BD = ["DNAZoo","NCBI"]
 
 ## Cette règle contient en entrée le dernier fichier généré par le pipeline. Il permet d'automatiser le lancement de ce dernier.
 rule all:
         input:
-                tmp("sorties/{espece}/complete_{espece}_{genre}_{BD}_{assemblie}_{score_busco}")
-
+                expand("sorties/{espece}/complete_{espece}_{genre}_{BD}_{assemblie}_{score_busco}", espece=config[files_list]["Specie"],
+                        genre=config[files_list]["Genre"], BD=config[files_list]["BD"], assemblie=config[files_list]["Assemblie_name"])
                 # expand("sorties/{espece}/ORA/{espece}_{BD}_OR_list.fa", espece=ESPECES,BD=liste_BD),
                 expand("{espece}_{BD}_busco/run_cetartiodactyla_odb10/short_summary.txt", espece=ESPECES,BD=liste_BD),
                 "../donnees/gene_completed.csv"
@@ -32,9 +44,9 @@ rule all:
 ## Les tests ont été effectué sur busco v5.2.2. 
 rule run_busco:
         input:
-                "../donnees/{espece}/{espece}_{BD}.fasta"
+                "../donnees/{espece}_{BD}.fasta"
         output:
-        tmp(directory("sorties/{espece}/score_busco/{espece}_{BD}_busco"))
+        temp(directory("sorties/{espece}/score_busco/{espece}_{BD}_busco"))
         params:
                 directory = "{espece}_{BD}_busco"  
         #log:
@@ -64,7 +76,7 @@ rule augustus :
         input : 
                 "../donnees/{espece}/{espece}_{BD}.fasta"
         output:
-                tmp("sorties/{espece}/augustus/{espece}_{BD}.gff")
+                temp("sorties/{espece}/augustus/{espece}_{BD}.gff")
         # conda : 
         #         "envs/augustus.yaml" 
         shell : 
@@ -88,7 +100,7 @@ rule bedtools :
                 fasta="../donnees/{espece}/{espece}_{BD}.fasta", 
                 gff="sorties/{espece}/augustus/{espece}_{BD}_genes.gff"
         output:
-                tmp("sorties/{espece}/bedtools/{espece}_{BD}_OR.fasta")
+                temp("sorties/{espece}/bedtools/{espece}_{BD}_OR.fasta")
         # conda : 
         #         "envs/bedtools.yaml" 
         shell: 
@@ -100,11 +112,10 @@ rule split:
         input:
                 "sorties/{espece}/bedtools/{espece}_{BD}_OR.fasta"
         output: 
-                tmp("sorties/{espece}/bedtools/{espece}_{BD}_OR_lower_length.fasta",)
+                temp("sorties/{espece}/bedtools/{espece}_{BD}_OR_lower_length.fasta",)
                 "sorties/{espece}/bedtools/{espece}_{BD}_OR_superior_length.fasta"
 
         run: 
-
                 with open(input[0],"r") as fasta_file :
                         with open (output[0],"w") as sortie:
                                 with open (output[1],"w") as output_alternative:
@@ -131,8 +142,7 @@ rule complete_BD :
                 multifasta="sorties/{espece}/bedtools/{espece}_{BD}_OR_lower_length.fasta",
 
         output:
-                tmp("sorties/{espece}/complete_{espece}_{genre}_{BD}_{assemblie}_{score_busco}")
-
+                temp("sorties/{espece}/complete_{espece}_{genre}_{BD}_{assemblie}_{score_busco}")
 
         shell :
                 "python3  ORA_to_BD.py {multifasta} {espece} {genre} {BD} {assemblie} {score_busco}"
