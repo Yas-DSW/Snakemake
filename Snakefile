@@ -10,9 +10,11 @@ from Bio import SeqIO
 import csv
 import re
 import glob
+import psycopg2
 
 ## La liste ci-dessous correspond à la liste des espèce et des différentes bases de données utilisées. IL est possible d'ajouter
 ## des espèces et bases de données, cependant les espèces listées doivent se trouver dans toute les bases de données.
+
 
 
 
@@ -135,6 +137,26 @@ rule ORA:
         shell : 
                 "or.pl --sequence={input} > {output}"
 
+
+
+
+########## Ajout de l'expérience à la base de données  ################
+
+connect = psycopg2.connect("dbname=cegec user='postgres' host='localhost' port='5433'")
+nouvel_experience="INSERT INTO experience (pipeline) VALUES ('Pipeline de Yascim')"
+cur=connection.cursor()
+cur.execute(nouvel_experience)
+connection.commit()
+
+######## Récupération de l'identifiant généré ####################
+recup_experience="SELECT max(id) from experience;"
+
+cur.execute(recup_experience)
+ID_experience=cur.fetchall()
+
+
+
+
 ### Cette règle permet de modifier le CSV d'entrée pour qu'il soit rempli après.
 
 rule complete_BD :
@@ -145,7 +167,7 @@ rule complete_BD :
                 temp("sorties/{espece}/complete_{espece}_{genre}_{BD}_{assemblie}_{score_busco}")
 
         shell :
-                "python3  ORA_to_BD.py {multifasta} {espece} {genre} {BD} {assemblie} {score_busco}"
+                "python3  multifasta_to_bd.py {espece}_{genre} {BD} {score_busco} {multifasta} {assemblie} {ID_experience} "
 
 
 
