@@ -1,0 +1,117 @@
+########### Snakefile créé par Yascim Kamel dans le cadre de son stage de master 2 dans le cadre du projet collaboratif DICWOC entre l'ISEM et au CEFE. #########################
+######################################################
+#####################################################################################
+#######          Les versions des outils ici utilisés sont : -busco v5.2.2                                              ###################
+#######                                                      -augustus v3.3.3                                           ###################
+#######                                                      -bedtools v2.27.1                                          ###################
+#######                                                      -Biopython v1.79                                           ###################
+#######                                                      -HMMER v3.3.2                                              ###################
+#######	                                                     -ORAv2.0                                                   ###################
+#######                                                      -GRA                                                       ###################
+##########################################
+#################################################################################################
+############################################
+###############################################################################################
+from Bio import SeqIO
+
+
+## La liste ci-dessous correspond à la liste des espèce et des différentes bases de données utilisées. IL est possible d'ajouter
+## des espèces et bases de données, cependant les espèces listées doivent se trouver dans toute les bases de données.
+
+
+ESPECES=["Megaptera_novaeangliae","Globicephala_melas", "Tursiop_truncatus"]
+liste_BD = ["DNAZoo","NCBI"]
+
+
+## Cette règle contient en entrée le dernier fichier généré par le pipeline. Elle permet d'automatiser le lancement de ce dernier.
+rule all:
+        input:
+            expand("sorties/{espece}/{espece}_{BD}_OR_list.fa", espece=ESPECES,BD=liste_BD),
+            expand("sorties/{espece}/{espece}_{BD}_TAS_list.fa", espece=ESPECES,BD=liste_BD)
+                # expand("{espece}_{BD}_busco/run_cetartiodactyla_odb10/short_summary.txt", espece=ESPECES,BD=liste_BD)
+
+
+### Cette règle permet d'utiliser l'outil augustus. C'est un outil ab initio qui génère un fichier au format gff contenant les coordonées génomiques 
+### des gènes potentiels contenu dans un génome au format fasta.
+rule augustus :
+        input : 
+                "../genomes/{espece}/{espece}_{BD}.fasta"
+        output:
+                "sorties/{espece}/augustus/{espece}_{BD}.gff"
+        shell : 
+                "augustus --species=human --protein=off --introns=off --start=off --stop=off --cds=off --exonnames=off  {input} > {output}"
+
+rule augustus_only_gene : 
+        input :
+                "sorties/{espece}/augustus/{espece}_{BD}.gff"
+        output:
+                "sorties/{espece}/augustus/{espece}_{BD}_genes.gff"
+        shell : 
+                "python3 extraction_line.py {input} {output}"
+
+
+
+### la fonction getfasta de bedtools permet de croiser des fichiers au format fasta et gff afin de pouvoir extraire les portions génomiques
+### correspondantes au format fasta. Cette étape est nécessaire en vue de l'utilisation du prochain outil. 
+
+rule bedtools : 
+        input: 
+                fasta="../genomes/{espece}/{espece}_{BD}.fasta", 
+                gff="sorties/{espece}/augustus/{espece}_{BD}_genes.gff"
+        output:
+                temp("sorties/{espece}/bedtools/{espece}_{BD}_OR.fasta")
+        shell: 
+                "bedtools getfasta "
+                "-fo {output} "
+                "-fi {input.fasta} "
+
+                "-bed {input.gff}"
+
+##### Récupération des séquences supérieures à 25000 pb pour un traitement ultérieur (gènes olfactifs)
+rule split:
+        input:
+                "sorties/{espece}/bedtools/{espece}_{BD}_OR.fasta"
+        output: 
+                temp("sorties/{espece}/bedtools/{espece}_{BD}_OR_lower_length.fasta"),
+                "sorties/{espece}/bedtools/{espece}_{BD}_OR_superior_length.fasta"
+        run: 
+                with open(input[0],"r") as fasta_file :
+                        with open (output[0],"w") as sortie:
+                                with open (output[1],"w") as output_alternative:
+                                        for record in SeqIO.parse(fasta_file,"fasta"): 
+                                                if len(record.seq)<= 2500:
+                                                        sortie.write('>'+ str(record.id)+'\n'+ str(record.seq)+ '\n')
+                                                else:
+                                                        output_alternative.write('>'+ str(record.id)+'\n'+ str(record.seq)+ '\n')
+
+##### Elimination des séquences trop petite (<500 pb) ou trop grande (>10500 pb) pour être des gènes TASR.
+rule split_second:
+        input:
+                "sorties/{espece}/bedtools/{espece}_{BD}_OR.fasta"
+        output: 
+                "sorties/{espece}/bedtools/{espece}_{BD}_OR_500-10500_length.fasta"
+        run: 
+            with open(input[0],"r") as fasta_file :
+                with open (output[0],"w") as sortie:
+                    for record in SeqIO.parse(fasta_file,"fasta"): 
+                        if (len(record.seq) >= 500 and len(record.seq) <= 10500):
+                            sortie.write('>'+ str(record.id)+'\n'+ str(record.seq)+ '\n')
+
+
+## ORA est un outil permettant d'identifier les gènes étant des gènes olfactifs. Il utilise en entrée un fichier fasta. 
+rule ORA:
+        input:
+                "sorties/{espece}/bedtools/{espece}_{BD}_OR_lower_length.fasta"
+        output:
+                "sorties/{espece}/{espece}_{BD}_OR_list.fa"
+        shell : 
+                "or.pl --sequence={input} > {output}"
+                
+#### Identification des gènes TASR par GRA. 
+rule GRA:
+    input:
+        "sorties/{espece}/bedtools/{espece}_{BD}_OR_500-10500_length.fasta"
+    output:
+        "sorties/{espece}/{espece}_{BD}_TAS_list.fa"
+    shell:
+        "./gra -o {output} -e 0.9e-20 {input}"
